@@ -2,8 +2,10 @@ package com.heebin.smartroute.init;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +24,7 @@ public class InitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(InitActivity.this, InitMapsActivity.class);
-                startActivityForResult(i,100);
+                startActivityForResult(i,Constants.need_home_loaction_init_google_map);
             }
         });
 
@@ -31,9 +33,22 @@ public class InitActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Constants.init_google_map_ok){
-            double latitude = data.getDoubleExtra("latitude",0);
-            double longitude = data.getDoubleExtra("longitude",0);
+
+
+        if (resultCode == Constants.init_google_map_ok) {
+            if(requestCode == Constants.need_home_loaction_init_google_map) {
+                double latitude = data.getDoubleExtra("latitude", 0);
+                double longitude = data.getDoubleExtra("longitude", 0);
+
+                Log.d("InitActivity", "onActivityResult: " +latitude +" "+longitude);
+
+            }
+            else if(requestCode == Constants.need_office_loaction_init_google_map){
+                double latitude = data.getDoubleExtra("latitude", 0);
+                double longitude = data.getDoubleExtra("longitude", 0);
+
+                Log.d("InitActivity", "onActivityResult: " +latitude +" "+longitude);
+            }
         }
     }
 }

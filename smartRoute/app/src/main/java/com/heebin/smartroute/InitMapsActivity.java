@@ -40,6 +40,7 @@ public class InitMapsActivity extends FragmentActivity implements OnMapReadyCall
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
     }
 
 
@@ -55,9 +56,10 @@ public class InitMapsActivity extends FragmentActivity implements OnMapReadyCall
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        mMap.setOnMapClickListener(this);
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ){
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.537453, 126.969243), 14));
         }else{
             initMap();
         }
@@ -70,7 +72,7 @@ public class InitMapsActivity extends FragmentActivity implements OnMapReadyCall
             final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-            Toast.makeText(this, location.getLatitude() +" "+ location.getLongitude(),Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, location.getLatitude() +" "+ location.getLongitude(),Toast.LENGTH_LONG).show();
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14));
         }
@@ -100,7 +102,7 @@ public class InitMapsActivity extends FragmentActivity implements OnMapReadyCall
         Intent intent = new Intent();
         intent.putExtra("latitude", latLng.latitude);
         intent.putExtra("longitude", latLng.longitude);
-        setResult(Constants.init_google_map_ok,intent);
+        setResult(Constants.init_google_map_ok, intent);
         finish();
 
 
