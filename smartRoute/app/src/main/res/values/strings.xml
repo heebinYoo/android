@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">smartRoute</string>
+    <string name="to_office">To Office</string>
+    <string name="to_home">To Home</string>
+    <string name="init">Initialise</string>
+    <string name="title_activity_init_maps">select location</string>
+    <string name="set_home">Let\'s set\nyour home first</string>
+    <string name="gobtn">Go</string>
 </resources>
