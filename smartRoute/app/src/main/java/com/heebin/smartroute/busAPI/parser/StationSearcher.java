@@ -1,4 +1,4 @@
-package com.heebin.smartroute.busAPI;
+package com.heebin.smartroute.busAPI.parser;
 
 import com.heebin.smartroute.bean.Station;
 import com.heebin.smartroute.bean.userData.UserLocation;
@@ -7,10 +7,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.io.Serializable;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,12 +19,24 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class StationSearcher extends GetConnector implements Runnable {
+public class StationSearcher extends GetConnector {
 
 
     private static final String urlBody = "http://ws.bus.go.kr/api/rest/stationinfo/getStationByPos";
 
-    @Override
+    private ArrayList<Station> homeStationList=null;
+    private ArrayList<Station> officeStationList=null;
+
+    public ArrayList<Station> getHomeStationList() {
+        return homeStationList;
+    }
+
+    public ArrayList<Station> getOfficeStationList() {
+        return officeStationList;
+    }
+
+
+
     public void run() {
         HashMap<String, String> prop;
 
@@ -32,15 +45,15 @@ public class StationSearcher extends GetConnector implements Runnable {
 
         prop = new HashMap<String, String>();
         prop.put("serviceKey", super.serviceKey);
-        prop.put("tmX", String.format("%.6f", UserLocation.getInstance().getHomeLat()));
-        prop.put("tmY", String.format("%.6f", UserLocation.getInstance().getHomeLong()));
+        prop.put("tmX", String.format("%.6f", UserLocation.getInstance().getHomeLong()));
+        prop.put("tmY", String.format("%.6f", UserLocation.getInstance().getHomeLat()));
         prop.put("radius", "1500");
         resultHome = this.get(this.makeURL(urlBody, prop));
 
         prop = new HashMap<String, String>();
         prop.put("serviceKey", super.serviceKey);
-        prop.put("tmX", String.format("%.6f", UserLocation.getInstance().getOfficeLat()));
-        prop.put("tmY", String.format("%.6f", UserLocation.getInstance().getOfficeLong()));
+        prop.put("tmX", String.format("%.6f", UserLocation.getInstance().getHomeLong()));
+        prop.put("tmY", String.format("%.6f", UserLocation.getInstance().getOfficeLat()));
         prop.put("radius", "1500");
         resultOffice = this.get(this.makeURL(urlBody, prop));
 
@@ -51,19 +64,18 @@ public class StationSearcher extends GetConnector implements Runnable {
     }
 
     @Override
-    protected void parse(String result) {
-        ArrayList<Station> homeStationList=null;
-        ArrayList<Station> officeStationList=null;
+    public void parse(String result) {
+
 
         try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(new InputSource(new StringReader(result)));
+            doc.getDocumentElement().normalize();
+
             if(homeStationList == null){
                 homeStationList = new ArrayList<Station>();
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = dbf.newDocumentBuilder();
-                Document doc = db.parse(result);
-                doc.getDocumentElement().normalize();
 
-                String s = "";
                 NodeList nodeList = doc.getElementsByTagName("itemList");
 
                 for(int i = 0; i< nodeList.getLength(); i++){
@@ -85,12 +97,7 @@ public class StationSearcher extends GetConnector implements Runnable {
             }
             else if(homeStationList != null && officeStationList==null) {
                 officeStationList = new ArrayList<Station>();
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = dbf.newDocumentBuilder();
-                Document doc = db.parse(result);
-                doc.getDocumentElement().normalize();
 
-                String s = "";
                 NodeList nodeList = doc.getElementsByTagName("itemList");
 
                 for(int i = 0; i< nodeList.getLength(); i++){

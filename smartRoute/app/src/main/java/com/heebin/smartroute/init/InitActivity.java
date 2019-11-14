@@ -1,5 +1,6 @@
 package com.heebin.smartroute.init;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,12 +14,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.heebin.smartroute.Constants;
 import com.heebin.smartroute.R;
+import com.heebin.smartroute.bean.Station;
 import com.heebin.smartroute.bean.userData.UserLocation;
-import com.heebin.smartroute.busAPI.StationSearcher;
+import com.heebin.smartroute.busAPI.async.AsyncTaskCallback;
+import com.heebin.smartroute.busAPI.async.StationSearcherRunner;
+import com.heebin.smartroute.busAPI.parser.StationSearcher;
 
-public class InitActivity extends AppCompatActivity {
+public class InitActivity extends AppCompatActivity implements AsyncTaskCallback {
     Button go;
     TextView inform;
+    ProgressDialog dialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,12 +68,32 @@ public class InitActivity extends AppCompatActivity {
                 UserLocation.getInstance().setOffice(latitude,longitude);
                 Log.d("InitActivityOffice", "onActivityResult: " +latitude +" "+longitude);
 
-                StationSearcher ss = new StationSearcher();//다른 방법 찾아보기
-                AsyncTask.execute(ss);
+                dialog = new ProgressDialog(this);
+                dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                dialog.setMessage("데이터 확인중");
+                dialog.show();
 
-                finish();
+                new StationSearcherRunner(this).execute(1);
+
             }
 
         }
+    }
+
+    @Override
+    public void onSuccess(String result) {
+        dialog.dismiss();
+
+        for(Station x : UserLocation.getInstance().getOfficeStationList())
+            Log.d("result", "onSuccess: " + x.getStationName());
+
+        finish();
+
+
+    }
+
+    @Override
+    public void onFailure(Exception e) {
+
     }
 }

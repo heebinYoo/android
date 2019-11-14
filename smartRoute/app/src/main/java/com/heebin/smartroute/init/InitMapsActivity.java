@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -74,7 +75,7 @@ public class InitMapsActivity extends FragmentActivity implements OnMapReadyCall
             final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-            //Toast.makeText(this, location.getLatitude() +" "+ location.getLongitude(),Toast.LENGTH_LONG).show();
+            Log.d("where", "initMap: " + location.getLatitude() + " :: " +location.getLongitude());
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14));
         }

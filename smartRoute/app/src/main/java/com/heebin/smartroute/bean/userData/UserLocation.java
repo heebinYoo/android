@@ -38,6 +38,10 @@ public class UserLocation {
         this.officeStationList=officeStationList;
     }
 
+    public ArrayList<Station> getOfficeStationList() {
+        return officeStationList;
+    }
+
     public double getHomeLat() {
         return homeLat;
     }

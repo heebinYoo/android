@@ -1,4 +1,4 @@
-package com.heebin.smartroute.busAPI;
+package com.heebin.smartroute.busAPI.parser;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -18,6 +18,11 @@ public abstract class GetConnector {
 
     final protected String serviceKey = "KhPxLJdPDVQZwVP4PWVyIXCXXaqu3PQUTE%2BSX7fEAYicTAdXjr%2Bhb0%2Bucz%2FHfBpWmTWiLRHMnFBtqCF2AnkX8Q%3D%3D";
     protected abstract void parse(String result);
+
+    public String getServiceKey() {
+        return serviceKey;
+    }
+
     protected URL makeURL(String strUrl, HashMap<String, String> property) {
         StringBuffer urlForm = new StringBuffer();
         String finalUrl;
