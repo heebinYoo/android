@@ -1,4 +1,4 @@
-package com.heebin.smartroute.bean;
+package com.heebin.smartroute.bean.raw;
 
 public class Station {
     private String stationId;

@@ -1,6 +1,6 @@
 package com.heebin.smartroute.busAPI.connector;
 
-import com.heebin.smartroute.bean.Station;
+import com.heebin.smartroute.bean.raw.Station;
 import com.heebin.smartroute.bean.userData.UserLocation;
 
 import org.w3c.dom.Document;

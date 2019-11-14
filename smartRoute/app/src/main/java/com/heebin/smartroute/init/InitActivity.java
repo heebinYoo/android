@@ -13,11 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.heebin.smartroute.Constants;
 import com.heebin.smartroute.R;
-import com.heebin.smartroute.bean.Station;
+import com.heebin.smartroute.bean.raw.Path;
+import com.heebin.smartroute.bean.raw.Route;
 import com.heebin.smartroute.bean.userData.UserLocation;
 import com.heebin.smartroute.busAPI.async.AsyncTaskCallback;
 import com.heebin.smartroute.busAPI.async.Runner;
-import com.heebin.smartroute.busAPI.connector.StationSearcherConnector;
+import com.heebin.smartroute.busAPI.connector.RouteSearcherConnector;
 
 public class InitActivity extends AppCompatActivity implements AsyncTaskCallback {
     Button go;
@@ -72,7 +73,7 @@ public class InitActivity extends AppCompatActivity implements AsyncTaskCallback
                 dialog.setMessage("데이터 확인중");
                 dialog.show();
 
-                new Runner(this, new StationSearcherConnector()).execute(1);
+                new Runner(this, new RouteSearcherConnector()).execute(1);
 
             }
 
@@ -83,9 +84,10 @@ public class InitActivity extends AppCompatActivity implements AsyncTaskCallback
     public void onSuccess(String result) {
         dialog.dismiss();
 
-        //for(Station x : UserLocation.getInstance().getOfficeStationList())
-        //    Log.d("result", "onSuccess: " + x.getStationName());
-
+        for(Route x : UserLocation.getInstance().getO2hRouteList()) {
+            for (Path y : x.getPathList())
+                Log.d("result", "onSuccess: " +y.toString());
+        }
         finish();
 
 

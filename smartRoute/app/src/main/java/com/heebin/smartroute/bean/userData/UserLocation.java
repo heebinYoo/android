@@ -1,6 +1,7 @@
 package com.heebin.smartroute.bean.userData;
 
-import com.heebin.smartroute.bean.Station;
+import com.heebin.smartroute.bean.raw.Route;
+import com.heebin.smartroute.bean.raw.Station;
 
 import java.util.ArrayList;
 
@@ -20,8 +21,13 @@ public class UserLocation {
     private double officeLat;
     private double officeLong;
 
+    @Deprecated
     private ArrayList<Station> homeStationList;
+    @Deprecated
     private ArrayList<Station> officeStationList;
+
+    private ArrayList<Route> h2oRouteList;
+    private ArrayList<Route> o2hRouteList;
 
     public void setHome(double homeLat, double homeLong) {
         this.homeLat = homeLat;
@@ -33,13 +39,19 @@ public class UserLocation {
         this.officeLong = officeLong;
     }
 
+    @Deprecated
     public void setStationLists(ArrayList<Station> homeStationList, ArrayList<Station> officeStationList){
         this.homeStationList=homeStationList;
         this.officeStationList=officeStationList;
     }
 
-    public ArrayList<Station> getOfficeStationList() {
-        return officeStationList;
+    public void setRouteList(ArrayList<Route> h2oRouteList, ArrayList<Route> o2hRouteList) {
+        this.h2oRouteList = h2oRouteList;
+        this.o2hRouteList = o2hRouteList;
+    }
+
+    public ArrayList<Route> getO2hRouteList() {
+        return o2hRouteList;
     }
 
     public double getHomeLat() {
