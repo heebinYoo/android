@@ -2,7 +2,6 @@ package com.heebin.smartroute.init;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,8 +16,8 @@ import com.heebin.smartroute.R;
 import com.heebin.smartroute.bean.Station;
 import com.heebin.smartroute.bean.userData.UserLocation;
 import com.heebin.smartroute.busAPI.async.AsyncTaskCallback;
-import com.heebin.smartroute.busAPI.async.StationSearcherRunner;
-import com.heebin.smartroute.busAPI.parser.StationSearcher;
+import com.heebin.smartroute.busAPI.async.Runner;
+import com.heebin.smartroute.busAPI.connector.StationSearcherConnector;
 
 public class InitActivity extends AppCompatActivity implements AsyncTaskCallback {
     Button go;
@@ -73,7 +72,7 @@ public class InitActivity extends AppCompatActivity implements AsyncTaskCallback
                 dialog.setMessage("데이터 확인중");
                 dialog.show();
 
-                new StationSearcherRunner(this).execute(1);
+                new Runner(this, new StationSearcherConnector()).execute(1);
 
             }
 
@@ -84,8 +83,8 @@ public class InitActivity extends AppCompatActivity implements AsyncTaskCallback
     public void onSuccess(String result) {
         dialog.dismiss();
 
-        for(Station x : UserLocation.getInstance().getOfficeStationList())
-            Log.d("result", "onSuccess: " + x.getStationName());
+        //for(Station x : UserLocation.getInstance().getOfficeStationList())
+        //    Log.d("result", "onSuccess: " + x.getStationName());
 
         finish();
 

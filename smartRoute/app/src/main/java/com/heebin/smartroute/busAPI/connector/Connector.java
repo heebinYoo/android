@@ -1,24 +1,17 @@
-package com.heebin.smartroute.busAPI.parser;
+package com.heebin.smartroute.busAPI.connector;
 
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-public abstract class GetConnector {
+public abstract class Connector {
 
     final protected String serviceKey = "KhPxLJdPDVQZwVP4PWVyIXCXXaqu3PQUTE%2BSX7fEAYicTAdXjr%2Bhb0%2Bucz%2FHfBpWmTWiLRHMnFBtqCF2AnkX8Q%3D%3D";
     protected abstract void parse(String result);
-
+    public abstract void run();
     public String getServiceKey() {
         return serviceKey;
     }

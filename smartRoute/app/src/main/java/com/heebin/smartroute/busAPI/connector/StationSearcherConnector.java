@@ -1,4 +1,4 @@
-package com.heebin.smartroute.busAPI.parser;
+package com.heebin.smartroute.busAPI.connector;
 
 import com.heebin.smartroute.bean.Station;
 import com.heebin.smartroute.bean.userData.UserLocation;
@@ -19,7 +19,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class StationSearcher extends GetConnector {
+public class StationSearcherConnector extends Connector {
 
 
     private static final String urlBody = "http://ws.bus.go.kr/api/rest/stationinfo/getStationByPos";

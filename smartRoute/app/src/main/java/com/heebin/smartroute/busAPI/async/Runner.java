@@ -2,34 +2,27 @@ package com.heebin.smartroute.busAPI.async;
 
 import android.os.AsyncTask;
 
-import com.heebin.smartroute.busAPI.parser.StationSearcher;
+import com.heebin.smartroute.busAPI.connector.Connector;
 
-public class StationSearcherRunner extends AsyncTask<Integer, String, Integer> {
+public class Runner extends AsyncTask<Integer, String, Integer> {
 
-    StationSearcher ss;
+    Connector connector;
     AsyncTaskCallback asyncTaskCallback;
 
-    public StationSearcherRunner(AsyncTaskCallback asyncTaskCallback){
+    public Runner(AsyncTaskCallback asyncTaskCallback, Connector connector){
         this.asyncTaskCallback = asyncTaskCallback;
-
-
-
-    }
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        ss = new StationSearcher();
-
+        this.connector = connector;
 
 
     }
+
 
 
     @Override
     protected Integer doInBackground(Integer... integers) {
 
 
-        ss.run();
+        connector.run();
 
         return null;
     }
