@@ -72,6 +72,9 @@ public class Path{
         return offName;
     }
 
+    public String getRouteID() {
+        return routeID;
+    }
 
     public boolean equivalents(@Nullable Path target) {
             if( this.offId.equals(target.offId) && this.takeId.equals(target.takeId) ) {
@@ -79,5 +82,7 @@ public class Path{
             }
         return false;
     }
+
+
 
 }

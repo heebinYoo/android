@@ -88,8 +88,7 @@ public class StationSearcherConnector extends Connector {
                             fstElmnt.getElementsByTagName("stationNm").item(0).getChildNodes().item(0).getNodeValue(),
                             Double.parseDouble( fstElmnt.getElementsByTagName("gpsX").item(0).getChildNodes().item(0).getNodeValue()),
                             Double.parseDouble(  fstElmnt.getElementsByTagName("gpsY").item(0).getChildNodes().item(0).getNodeValue()),
-                            fstElmnt.getElementsByTagName("arsId").item(0).getChildNodes().item(0).getNodeValue(),
-                            Integer.parseInt( fstElmnt.getElementsByTagName("dist").item(0).getChildNodes().item(0).getNodeValue())
+                            fstElmnt.getElementsByTagName("arsId").item(0).getChildNodes().item(0).getNodeValue()
                     );
                     homeStationList.add(data);
 
@@ -110,8 +109,7 @@ public class StationSearcherConnector extends Connector {
                         fstElmnt.getElementsByTagName("stationNm").item(0).getChildNodes().item(0).getNodeValue(),
                             Double.parseDouble( fstElmnt.getElementsByTagName("gpsX").item(0).getChildNodes().item(0).getNodeValue()),
                             Double.parseDouble(  fstElmnt.getElementsByTagName("gpsY").item(0).getChildNodes().item(0).getNodeValue()),
-                        fstElmnt.getElementsByTagName("arsId").item(0).getChildNodes().item(0).getNodeValue(),
-                       Integer.parseInt( fstElmnt.getElementsByTagName("dist").item(0).getChildNodes().item(0).getNodeValue())
+                        fstElmnt.getElementsByTagName("arsId").item(0).getChildNodes().item(0).getNodeValue()
                     );
                     officeStationList.add(data);
                 }

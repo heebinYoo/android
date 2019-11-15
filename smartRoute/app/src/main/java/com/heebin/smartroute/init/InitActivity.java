@@ -13,12 +13,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.heebin.smartroute.Constants;
 import com.heebin.smartroute.R;
+import com.heebin.smartroute.bean.refined.RefinedRoute;
 import com.heebin.smartroute.bean.userData.UserLocation;
 import com.heebin.smartroute.util.AsyncTaskCallback;
 import com.heebin.smartroute.busAPI.async.HTTPAsyncRunner;
 import com.heebin.smartroute.busAPI.connector.Connector;
 import com.heebin.smartroute.busAPI.connector.RouteSearcherConnector;
 import com.heebin.smartroute.busAPI.connector.StationSearcherConnector;
+
+import java.util.ArrayList;
 
 public class InitActivity extends AppCompatActivity implements AsyncTaskCallback {
     Button go;
@@ -85,6 +88,14 @@ public class InitActivity extends AppCompatActivity implements AsyncTaskCallback
     @Override
     public void onSuccess(String result) {
         dialog.dismiss();
+
+        UserLocation.getInstance().getRefinedh2oRoutes().forEach(refinedRoute -> Log.d("Refine", "home to office: "+refinedRoute.toString()));
+
+        //ArrayList<RefinedRoute> debug = UserLocation.getInstance().getRefinedo2hRoutes();
+
+        UserLocation.getInstance().getRefinedo2hRoutes().forEach(refinedRoute -> Log.d("Refine", "office to home: "+refinedRoute.toString()));
+
+        UserLocation x = UserLocation.getInstance();
 
         finish();
 

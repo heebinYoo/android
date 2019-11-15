@@ -5,15 +5,24 @@ import com.heebin.smartroute.bean.raw.Route;
 import com.heebin.smartroute.bean.raw.Station;
 import com.heebin.smartroute.bean.refined.RefinedPath;
 import com.heebin.smartroute.bean.refined.RefinedRoute;
+import com.heebin.smartroute.bean.userData.BusData;
 
 import java.util.ArrayList;
 
 public class RouteRefiner {
 
     public static ArrayList<RefinedRoute> refine(ArrayList<Route> raw){
+        gatherBusData(raw);
         return refineRoute(routeDeduplication(raw));
     }
+    private static void gatherBusData(ArrayList<Route> raw){
+        raw.forEach(route -> {
+            route.getPathList().forEach(path -> {
+                BusData.getInstance().addFromPath(path);
+            });
+        });
 
+    }
     private static ArrayList<Route> routeDeduplication(ArrayList<Route> raw){
         ArrayList<Route> uniqueRoute = new ArrayList<Route>();
 
@@ -21,7 +30,7 @@ public class RouteRefiner {
             boolean isNotAdded = true;
 
             for(int j=0; j<uniqueRoute.size(); j++){
-                isNotAdded = isNotAdded && raw.get(i).equivalents(uniqueRoute.get(j));
+                isNotAdded = isNotAdded && !raw.get(i).equivalents(uniqueRoute.get(j));
             }
 
             if(isNotAdded){
@@ -36,11 +45,14 @@ public class RouteRefiner {
         for(Route route:uniqueRoute) {
             RefinedRoute refinedRoute;
             ArrayList<RefinedPath> mainPathes = new ArrayList<RefinedPath>();
+            ArrayList<String> relatedBusId = new ArrayList<String>();
+
             route.getPathList().forEach(path -> {
                 mainPathes.add(new RefinedPath(path));
+                relatedBusId.add(path.getRouteID());
             });
 
-            refinedRoute = new RefinedRoute(mainPathes, route.getDistance(), route.getTime());
+            refinedRoute = new RefinedRoute(mainPathes, route.getDistance(), route.getTime(), relatedBusId);
 
             refinedRoutes.add(refinedRoute);
         }

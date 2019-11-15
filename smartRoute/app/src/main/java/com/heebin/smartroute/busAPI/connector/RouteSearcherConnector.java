@@ -41,8 +41,6 @@ public class RouteSearcherConnector extends Connector {
        UserLocation debug = UserLocation.getInstance();
 
         for(SrcDstStation x : UserLocation.getInstance().geth2oCatesianSrcDst()) {
-
-
             prop = new HashMap<String, String>();
             prop.put("serviceKey", super.serviceKey);
             prop.put("startX", String.format("%.6f", x.src.getGpsX()));
@@ -69,13 +67,17 @@ public class RouteSearcherConnector extends Connector {
 
 
         UserLocation.getInstance().setRouteList(h2orouteList, o2hrouteList);
-        int i = 0;
-        for(Route x: h2orouteList) {
-            Log.d("RouteSearcherConnector", "route" + i++);
-            for(Path y: x.getPathList()) {
-                Log.d("RouteSearcherConnector", "run: " +y.toString());
-            }
-        }
+
+
+//        int i = 0;
+//        for(Route x: o2hrouteList) {
+//            Log.d("RouteSearcherConnector", "route" + i++);
+//            for(Path y: x.getPathList()) {
+//                Log.d("RouteSearcherConnector", "run: " +y.toString());
+//            }
+//        }
+
+
 
     }
 
@@ -137,12 +139,14 @@ public class RouteSearcherConnector extends Connector {
                     Element fstElmnt = (Element) node;
 
                     Route data;
-                    data = new Route(Integer.parseInt(fstElmnt.getElementsByTagName("distance").item(0).getChildNodes().item(0).getNodeValue()),
-                            Integer.parseInt(fstElmnt.getElementsByTagName("time").item(0).getChildNodes().item(0).getNodeValue()));
+                    int distance =Integer.parseInt(fstElmnt.getElementsByTagName("distance").item(0).getChildNodes().item(0).getNodeValue());
+                    int time = Integer.parseInt(fstElmnt.getElementsByTagName("time").item(0).getChildNodes().item(0).getNodeValue());
+                    data = new Route(distance, time);
 
                     NodeList pathList = fstElmnt.getElementsByTagName("pathList");
+
                     for (int j = 0; j < pathList.getLength(); j++) {
-                        Node pathNode = pathList.item(i);
+                        Node pathNode = pathList.item(j);
                         Element fstPathElmnt = (Element) pathNode;
 
                         data.addNewPath(

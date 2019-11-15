@@ -36,6 +36,13 @@ public class UserLocation {
     private ArrayList<RefinedRoute> refinedh2oRoutes;
     private ArrayList<RefinedRoute> refinedo2hRoutes;
 
+    public ArrayList<RefinedRoute> getRefinedh2oRoutes() {
+        return refinedh2oRoutes;
+    }
+
+    public ArrayList<RefinedRoute> getRefinedo2hRoutes() {
+        return refinedo2hRoutes;
+    }
 
     public void setHome(double homeLat, double homeLong) {
         this.homeLat = homeLat;
