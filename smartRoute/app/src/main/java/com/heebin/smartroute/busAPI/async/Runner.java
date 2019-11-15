@@ -6,14 +6,12 @@ import com.heebin.smartroute.busAPI.connector.Connector;
 
 public class Runner extends AsyncTask<Integer, String, Integer> {
 
-    Connector connector;
+    Connector[] connector;
     AsyncTaskCallback asyncTaskCallback;
 
-    public Runner(AsyncTaskCallback asyncTaskCallback, Connector connector){
+    public Runner(AsyncTaskCallback asyncTaskCallback, Connector[] connector){
         this.asyncTaskCallback = asyncTaskCallback;
         this.connector = connector;
-
-
     }
 
 
@@ -21,9 +19,9 @@ public class Runner extends AsyncTask<Integer, String, Integer> {
     @Override
     protected Integer doInBackground(Integer... integers) {
 
-
-        connector.run();
-
+        for(Connector x : connector) {
+            x.run();
+        }
         return null;
     }
 

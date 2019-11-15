@@ -52,7 +52,7 @@ public class StationSearcherConnector extends Connector {
 
         prop = new HashMap<String, String>();
         prop.put("serviceKey", super.serviceKey);
-        prop.put("tmX", String.format("%.6f", UserLocation.getInstance().getHomeLong()));
+        prop.put("tmX", String.format("%.6f", UserLocation.getInstance().getOfficeLong()));
         prop.put("tmY", String.format("%.6f", UserLocation.getInstance().getOfficeLat()));
         prop.put("radius", "1500");
         resultOffice = this.get(this.makeURL(urlBody, prop));

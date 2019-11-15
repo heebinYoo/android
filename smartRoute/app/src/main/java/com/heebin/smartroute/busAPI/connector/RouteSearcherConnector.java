@@ -1,5 +1,9 @@
 package com.heebin.smartroute.busAPI.connector;
 
+import android.util.Log;
+
+import com.heebin.smartroute.bean.meta.SrcDstStation;
+import com.heebin.smartroute.bean.raw.Path;
 import com.heebin.smartroute.bean.raw.Route;
 import com.heebin.smartroute.bean.userData.UserLocation;
 
@@ -23,38 +27,58 @@ public class RouteSearcherConnector extends Connector {
 
     private static final String urlBody = "http://ws.bus.go.kr/api/rest/pathinfo/getPathInfoByBus";
 
-    private ArrayList<Route> h2orouteList=null;
-    private ArrayList<Route> o2hrouteList=null;
+    private ArrayList<Route> h2orouteList = new ArrayList<Route>();
+    private ArrayList<Route> o2hrouteList = new ArrayList<Route>();
+
+    public boolean ish2oDone=false;
+
     @Override
     public void run() {
         HashMap<String, String> prop;
 
         String h2oresult;
         String o2hresult;
+       UserLocation debug = UserLocation.getInstance();
 
-        prop = new HashMap<String, String>();
-        prop.put("serviceKey", super.serviceKey);
-        prop.put("startX", String.format("%.6f", 127.020444));//UserLocation.getInstance().getHomeLong()));
-        prop.put("startY", String.format("%.6f", 37.576996));//UserLocation.getInstance().getHomeLat()));
-        prop.put("endX", String.format("%.6f", 126.969254));//UserLocation.getInstance().getHomeLong()));
-        prop.put("endY", String.format("%.6f",37.565946));//UserLocation.getInstance().getHomeLat()));
+        for(SrcDstStation x : UserLocation.getInstance().geth2oCatesianSrcDst()) {
 
-        h2oresult = this.get(this.makeURL(urlBody, prop));
 
-        prop = new HashMap<String, String>();
-        prop.put("serviceKey", super.serviceKey);
-        prop.put("endX", String.format("%.6f", UserLocation.getInstance().getHomeLong()));
-        prop.put("endY", String.format("%.6f", UserLocation.getInstance().getHomeLat()));
-        prop.put("startX", String.format("%.6f", UserLocation.getInstance().getHomeLong()));
-        prop.put("startY", String.format("%.6f", UserLocation.getInstance().getHomeLat()));
+            prop = new HashMap<String, String>();
+            prop.put("serviceKey", super.serviceKey);
+            prop.put("startX", String.format("%.6f", x.src.getGpsX()));
+            prop.put("startY", String.format("%.6f", x.src.getGpsY()));
+            prop.put("endX", String.format("%.6f", x.dst.getGpsX()));
+            prop.put("endY", String.format("%.6f", x.dst.getGpsY()));
 
-        o2hresult = this.get(this.makeURL(urlBody, prop));
+            h2oresult = this.get(this.makeURL(urlBody, prop));
+            parse(h2oresult);
+        }
+        ish2oDone=true;
 
-        parse(h2oresult);
-        parse(o2hresult);
+        for(SrcDstStation x : UserLocation.getInstance().geth2oCatesianSrcDst()) {
+            prop = new HashMap<String, String>();
+            prop.put("serviceKey", super.serviceKey);
+            prop.put("startX", String.format("%.6f", x.src.getGpsX()));
+            prop.put("startY", String.format("%.6f", x.src.getGpsY()));
+            prop.put("endX", String.format("%.6f", x.dst.getGpsX()));
+            prop.put("endY", String.format("%.6f", x.dst.getGpsY()));
+
+            o2hresult = this.get(this.makeURL(urlBody, prop));
+            parse(o2hresult);
+        }
+
+
         UserLocation.getInstance().setRouteList(h2orouteList, o2hrouteList);
+        int i = 0;
+        for(Route x: h2orouteList) {
+            Log.d("RouteSearcherConnector", "route" + i++);
+            for(Path y: x.getPathList()) {
+                Log.d("RouteSearcherConnector", "run: " +y.toString());
+            }
+        }
 
     }
+
 
 
     @Override
@@ -65,8 +89,8 @@ public class RouteSearcherConnector extends Connector {
             Document doc = db.parse(new InputSource(new StringReader(result)));
             doc.getDocumentElement().normalize();
 
-            if(h2orouteList ==null) {
-                h2orouteList = new ArrayList<Route>();
+            if(!ish2oDone) {
+
 
                 NodeList nodeList = doc.getElementsByTagName("itemList");
 
@@ -100,8 +124,8 @@ public class RouteSearcherConnector extends Connector {
                 }
 
             }
-            else if(h2orouteList!=null && o2hrouteList ==null){
-                o2hrouteList = new ArrayList<Route>();
+            else if(ish2oDone){
+
 
                 NodeList nodeList = doc.getElementsByTagName("itemList");
 

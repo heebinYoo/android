@@ -1,9 +1,11 @@
 package com.heebin.smartroute.bean.userData;
 
+import com.heebin.smartroute.bean.meta.SrcDstStation;
 import com.heebin.smartroute.bean.raw.Route;
 import com.heebin.smartroute.bean.raw.Station;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserLocation {
     private UserLocation(){}
@@ -21,9 +23,9 @@ public class UserLocation {
     private double officeLat;
     private double officeLong;
 
-    @Deprecated
+
     private ArrayList<Station> homeStationList;
-    @Deprecated
+
     private ArrayList<Station> officeStationList;
 
     private ArrayList<Route> h2oRouteList;
@@ -39,7 +41,7 @@ public class UserLocation {
         this.officeLong = officeLong;
     }
 
-    @Deprecated
+
     public void setStationLists(ArrayList<Station> homeStationList, ArrayList<Station> officeStationList){
         this.homeStationList=homeStationList;
         this.officeStationList=officeStationList;
@@ -48,6 +50,26 @@ public class UserLocation {
     public void setRouteList(ArrayList<Route> h2oRouteList, ArrayList<Route> o2hRouteList) {
         this.h2oRouteList = h2oRouteList;
         this.o2hRouteList = o2hRouteList;
+    }
+
+    public ArrayList<SrcDstStation> geth2oCatesianSrcDst(){
+        ArrayList<SrcDstStation> result = new ArrayList<SrcDstStation>();
+        for(Station src: homeStationList){
+            for(Station dst: officeStationList){
+                result.add(new SrcDstStation(src,dst));
+            }
+        }
+
+        return (ArrayList<SrcDstStation>) result.subList(0, 10); //result 로 바꾸기
+    }
+    public ArrayList<SrcDstStation> geto2hCatesianSrcDst(){
+        ArrayList<SrcDstStation> result = new ArrayList<SrcDstStation>();
+        for(Station src:officeStationList ){
+            for(Station dst: homeStationList){
+                result.add(new SrcDstStation(src,dst));
+            }
+        }
+        return (ArrayList<SrcDstStation>) result.subList(0, 10); //result 로 바꾸기
     }
 
     public ArrayList<Route> getO2hRouteList() {

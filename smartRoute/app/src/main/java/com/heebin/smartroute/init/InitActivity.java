@@ -18,7 +18,9 @@ import com.heebin.smartroute.bean.raw.Route;
 import com.heebin.smartroute.bean.userData.UserLocation;
 import com.heebin.smartroute.busAPI.async.AsyncTaskCallback;
 import com.heebin.smartroute.busAPI.async.Runner;
+import com.heebin.smartroute.busAPI.connector.Connector;
 import com.heebin.smartroute.busAPI.connector.RouteSearcherConnector;
+import com.heebin.smartroute.busAPI.connector.StationSearcherConnector;
 
 public class InitActivity extends AppCompatActivity implements AsyncTaskCallback {
     Button go;
@@ -73,7 +75,9 @@ public class InitActivity extends AppCompatActivity implements AsyncTaskCallback
                 dialog.setMessage("데이터 확인중");
                 dialog.show();
 
-                new Runner(this, new RouteSearcherConnector()).execute(1);
+                Connector[] connector = {new StationSearcherConnector(), new RouteSearcherConnector()};
+                new Runner(this, connector).execute(1);
+
 
             }
 
