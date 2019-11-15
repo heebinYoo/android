@@ -3,13 +3,14 @@ package com.heebin.smartroute.busAPI.async;
 import android.os.AsyncTask;
 
 import com.heebin.smartroute.busAPI.connector.Connector;
+import com.heebin.smartroute.util.AsyncTaskCallback;
 
-public class Runner extends AsyncTask<Integer, String, Integer> {
+public class HTTPAsyncRunner extends AsyncTask<Integer, String, Integer> {
 
     Connector[] connector;
     AsyncTaskCallback asyncTaskCallback;
 
-    public Runner(AsyncTaskCallback asyncTaskCallback, Connector[] connector){
+    public HTTPAsyncRunner(AsyncTaskCallback asyncTaskCallback, Connector[] connector){
         this.asyncTaskCallback = asyncTaskCallback;
         this.connector = connector;
     }

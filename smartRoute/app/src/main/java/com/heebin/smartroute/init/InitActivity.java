@@ -13,11 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.heebin.smartroute.Constants;
 import com.heebin.smartroute.R;
-import com.heebin.smartroute.bean.raw.Path;
-import com.heebin.smartroute.bean.raw.Route;
 import com.heebin.smartroute.bean.userData.UserLocation;
-import com.heebin.smartroute.busAPI.async.AsyncTaskCallback;
-import com.heebin.smartroute.busAPI.async.Runner;
+import com.heebin.smartroute.util.AsyncTaskCallback;
+import com.heebin.smartroute.busAPI.async.HTTPAsyncRunner;
 import com.heebin.smartroute.busAPI.connector.Connector;
 import com.heebin.smartroute.busAPI.connector.RouteSearcherConnector;
 import com.heebin.smartroute.busAPI.connector.StationSearcherConnector;
@@ -76,7 +74,7 @@ public class InitActivity extends AppCompatActivity implements AsyncTaskCallback
                 dialog.show();
 
                 Connector[] connector = {new StationSearcherConnector(), new RouteSearcherConnector()};
-                new Runner(this, connector).execute(1);
+                new HTTPAsyncRunner(this, connector).execute(1);
 
 
             }
