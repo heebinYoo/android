@@ -88,10 +88,6 @@ public class InitActivity extends AppCompatActivity implements AsyncTaskCallback
     public void onSuccess(String result) {
         dialog.dismiss();
 
-        for(Route x : UserLocation.getInstance().getO2hRouteList()) {
-            for (Path y : x.getPathList())
-                Log.d("result", "onSuccess: " +y.toString());
-        }
         finish();
 
 

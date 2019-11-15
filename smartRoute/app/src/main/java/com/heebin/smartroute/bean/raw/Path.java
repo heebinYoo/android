@@ -32,6 +32,6 @@ public class Path{
     @NonNull
     @Override
     public String toString() {
-        return " takeName : " +takeName + " routeName : " + routeName + " offId : " + offId;
+        return " takeName : " +takeName + " => routeName : " + routeName +" => offName: " + offName;
     }
 }

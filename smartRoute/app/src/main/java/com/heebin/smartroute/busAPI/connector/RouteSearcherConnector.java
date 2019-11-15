@@ -55,7 +55,7 @@ public class RouteSearcherConnector extends Connector {
         }
         ish2oDone=true;
 
-        for(SrcDstStation x : UserLocation.getInstance().geth2oCatesianSrcDst()) {
+        for(SrcDstStation x : UserLocation.getInstance().geto2hCatesianSrcDst()) {
             prop = new HashMap<String, String>();
             prop.put("serviceKey", super.serviceKey);
             prop.put("startX", String.format("%.6f", x.src.getGpsX()));
@@ -99,27 +99,30 @@ public class RouteSearcherConnector extends Connector {
                     Element fstElmnt = (Element) node;
 
                     Route data;
-                    data = new Route(Integer.parseInt(fstElmnt.getElementsByTagName("distance").item(0).getChildNodes().item(0).getNodeValue()),
-                            Integer.parseInt(fstElmnt.getElementsByTagName("time").item(0).getChildNodes().item(0).getNodeValue()));
+                    int distance =Integer.parseInt(fstElmnt.getElementsByTagName("distance").item(0).getChildNodes().item(0).getNodeValue());
+                    int time = Integer.parseInt(fstElmnt.getElementsByTagName("time").item(0).getChildNodes().item(0).getNodeValue());
+                    data = new Route(distance, time);
 
                     NodeList pathList = fstElmnt.getElementsByTagName("pathList");
+
                     for (int j = 0; j < pathList.getLength(); j++) {
-                        Node pathNode = nodeList.item(i);
-                        Element fstPathElmnt = (Element) node;
+                        Node pathNode = pathList.item(j);
+                        Element fstPathElmnt = (Element) pathNode;
 
                         data.addNewPath(
-                                fstElmnt.getElementsByTagName("fid").item(0).getChildNodes().item(0).getNodeValue(),
-                                fstElmnt.getElementsByTagName("fname").item(0).getChildNodes().item(0).getNodeValue(),
-                                Double.parseDouble(fstElmnt.getElementsByTagName("fx").item(0).getChildNodes().item(0).getNodeValue()),
-                                Double.parseDouble(fstElmnt.getElementsByTagName("fy").item(0).getChildNodes().item(0).getNodeValue()),
-                                fstElmnt.getElementsByTagName("routeId").item(0).getChildNodes().item(0).getNodeValue(),
-                                fstElmnt.getElementsByTagName("routeNm").item(0).getChildNodes().item(0).getNodeValue(),
-                                fstElmnt.getElementsByTagName("tid").item(0).getChildNodes().item(0).getNodeValue(),
-                                fstElmnt.getElementsByTagName("tname").item(0).getChildNodes().item(0).getNodeValue(),
-                                Double.parseDouble(fstElmnt.getElementsByTagName("tx").item(0).getChildNodes().item(0).getNodeValue()),
-                                Double.parseDouble(fstElmnt.getElementsByTagName("ty").item(0).getChildNodes().item(0).getNodeValue())
+                                fstPathElmnt.getElementsByTagName("fid").item(0).getChildNodes().item(0).getNodeValue(),
+                                fstPathElmnt.getElementsByTagName("fname").item(0).getChildNodes().item(0).getNodeValue(),
+                                Double.parseDouble(fstPathElmnt.getElementsByTagName("fx").item(0).getChildNodes().item(0).getNodeValue()),
+                                Double.parseDouble(fstPathElmnt.getElementsByTagName("fy").item(0).getChildNodes().item(0).getNodeValue()),
+                                fstPathElmnt.getElementsByTagName("routeId").item(0).getChildNodes().item(0).getNodeValue(),
+                                fstPathElmnt.getElementsByTagName("routeNm").item(0).getChildNodes().item(0).getNodeValue(),
+                                fstPathElmnt.getElementsByTagName("tid").item(0).getChildNodes().item(0).getNodeValue(),
+                                fstPathElmnt.getElementsByTagName("tname").item(0).getChildNodes().item(0).getNodeValue(),
+                                Double.parseDouble(fstPathElmnt.getElementsByTagName("tx").item(0).getChildNodes().item(0).getNodeValue()),
+                                Double.parseDouble(fstPathElmnt.getElementsByTagName("ty").item(0).getChildNodes().item(0).getNodeValue())
                         );
                     }
+
                     h2orouteList.add(data);
                 }
 
@@ -139,20 +142,20 @@ public class RouteSearcherConnector extends Connector {
 
                     NodeList pathList = fstElmnt.getElementsByTagName("pathList");
                     for (int j = 0; j < pathList.getLength(); j++) {
-                        Node pathNode = nodeList.item(i);
-                        Element fstPathElmnt = (Element) node;
+                        Node pathNode = pathList.item(i);
+                        Element fstPathElmnt = (Element) pathNode;
 
                         data.addNewPath(
-                                fstElmnt.getElementsByTagName("fid").item(0).getChildNodes().item(0).getNodeValue(),
-                                fstElmnt.getElementsByTagName("fname").item(0).getChildNodes().item(0).getNodeValue(),
-                                Double.parseDouble(fstElmnt.getElementsByTagName("fx").item(0).getChildNodes().item(0).getNodeValue()),
-                                Double.parseDouble(fstElmnt.getElementsByTagName("fy").item(0).getChildNodes().item(0).getNodeValue()),
-                                fstElmnt.getElementsByTagName("routeId").item(0).getChildNodes().item(0).getNodeValue(),
-                                fstElmnt.getElementsByTagName("routeNm").item(0).getChildNodes().item(0).getNodeValue(),
-                                fstElmnt.getElementsByTagName("tid").item(0).getChildNodes().item(0).getNodeValue(),
-                                fstElmnt.getElementsByTagName("tname").item(0).getChildNodes().item(0).getNodeValue(),
-                                Double.parseDouble(fstElmnt.getElementsByTagName("tx").item(0).getChildNodes().item(0).getNodeValue()),
-                                Double.parseDouble(fstElmnt.getElementsByTagName("ty").item(0).getChildNodes().item(0).getNodeValue())
+                                fstPathElmnt.getElementsByTagName("fid").item(0).getChildNodes().item(0).getNodeValue(),
+                                fstPathElmnt.getElementsByTagName("fname").item(0).getChildNodes().item(0).getNodeValue(),
+                                Double.parseDouble(fstPathElmnt.getElementsByTagName("fx").item(0).getChildNodes().item(0).getNodeValue()),
+                                Double.parseDouble(fstPathElmnt.getElementsByTagName("fy").item(0).getChildNodes().item(0).getNodeValue()),
+                                fstPathElmnt.getElementsByTagName("routeId").item(0).getChildNodes().item(0).getNodeValue(),
+                                fstPathElmnt.getElementsByTagName("routeNm").item(0).getChildNodes().item(0).getNodeValue(),
+                                fstPathElmnt.getElementsByTagName("tid").item(0).getChildNodes().item(0).getNodeValue(),
+                                fstPathElmnt.getElementsByTagName("tname").item(0).getChildNodes().item(0).getNodeValue(),
+                                Double.parseDouble(fstPathElmnt.getElementsByTagName("tx").item(0).getChildNodes().item(0).getNodeValue()),
+                                Double.parseDouble(fstPathElmnt.getElementsByTagName("ty").item(0).getChildNodes().item(0).getNodeValue())
                         );
                     }
                     o2hrouteList.add(data);

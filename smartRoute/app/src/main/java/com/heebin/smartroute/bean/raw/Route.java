@@ -11,6 +11,8 @@ public class Route {
     private ArrayList<Path> pathList;
 
     public Route(int time, int distance){
+        this.distance=distance;
+        this.time=time;
     pathList = new ArrayList<Path>();
     }
     public void addNewPath(String takeId,

@@ -62,7 +62,6 @@ public class InitMapsActivity extends FragmentActivity implements OnMapReadyCall
         mMap.setOnMapClickListener(this);
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ){
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.537453, 126.969243), 14));
         }else{
             initMap();
         }
@@ -80,7 +79,7 @@ public class InitMapsActivity extends FragmentActivity implements OnMapReadyCall
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14));
         }
         catch (SecurityException e){
-
+            Log.d("Exception", "initMap: security exception");
         }
     }
 
