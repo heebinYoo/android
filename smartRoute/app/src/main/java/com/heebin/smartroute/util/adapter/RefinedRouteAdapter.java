@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heebin.smartroute.R;
@@ -52,7 +51,7 @@ public class RefinedRouteAdapter extends RecyclerView.Adapter<RefinedRouteAdapte
         Context context = parent.getContext() ;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) ;
 
-        View view = inflater.inflate(R.layout.route_recyclerview_item, parent, false) ;
+        View view = inflater.inflate(R.layout.recyclerview_item_route, parent, false) ;
         RefinedRouteAdapter.ViewHolder vh = new RefinedRouteAdapter.ViewHolder(view) ;
 
         return vh ;

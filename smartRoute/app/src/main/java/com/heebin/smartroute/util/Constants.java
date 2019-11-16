@@ -12,4 +12,5 @@ public final class Constants {
     public static final int station=121;
     public static final int endStation = 122;
     public static final int bus =130;
+    public static final int user =131;
 }

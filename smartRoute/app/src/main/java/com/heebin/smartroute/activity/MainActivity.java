@@ -9,6 +9,8 @@ import android.widget.Button;
 
 import com.heebin.smartroute.R;
 import com.heebin.smartroute.activity.init.InitActivity;
+import com.heebin.smartroute.util.Constants;
+import com.heebin.smartroute.view.ElementView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
         Button office = findViewById(R.id.button); //office
         Button home = findViewById(R.id.button2); //home
         Button init = findViewById(R.id.button3); //init
+
+
+
 
         init.setOnClickListener(new View.OnClickListener() {
             @Override
