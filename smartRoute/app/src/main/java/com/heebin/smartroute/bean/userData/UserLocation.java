@@ -27,7 +27,6 @@ public class UserLocation {
 
 
     private ArrayList<Station> homeStationList;
-
     private ArrayList<Station> officeStationList;
 
     private ArrayList<Route> h2oRouteList;

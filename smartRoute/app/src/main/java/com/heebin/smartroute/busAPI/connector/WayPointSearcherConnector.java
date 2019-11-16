@@ -18,9 +18,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class WayPointSearcherConnect extends Connector {
+public class WayPointSearcherConnector extends Connector {
     private static final String urlBody = "http://ws.bus.go.kr/api/rest/busRouteInfo/getStaionByRoute";
-    //ServiceKey=KhPxLJdPDVQZwVP4PWVyIXCXXaqu3PQUTE%2BSX7fEAYicTAdXjr%2Bhb0%2Bucz%2FHfBpWmTWiLRHMnFBtqCF2AnkX8Q%3D%3D&busRouteId=151
+
 
     private String busId;
     private ArrayList<Station> stations;

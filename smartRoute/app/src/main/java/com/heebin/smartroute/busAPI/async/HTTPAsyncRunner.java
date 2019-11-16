@@ -3,7 +3,6 @@ package com.heebin.smartroute.busAPI.async;
 import android.os.AsyncTask;
 
 import com.heebin.smartroute.busAPI.connector.Connector;
-import com.heebin.smartroute.util.AsyncTaskCallback;
 
 public class HTTPAsyncRunner extends AsyncTask<Integer, String, Integer> {
 

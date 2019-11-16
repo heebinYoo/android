@@ -1,4 +1,4 @@
-package com.heebin.smartroute.init;
+package com.heebin.smartroute.activity.init;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -20,13 +20,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.heebin.smartroute.Constants;
+import com.heebin.smartroute.util.Constants;
 import com.heebin.smartroute.R;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class InitMapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener{

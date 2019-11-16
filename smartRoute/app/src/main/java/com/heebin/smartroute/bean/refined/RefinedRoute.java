@@ -3,7 +3,7 @@ package com.heebin.smartroute.bean.refined;
 import androidx.annotation.NonNull;
 
 import com.heebin.smartroute.bean.raw.Station;
-import com.heebin.smartroute.busAPI.connector.WayPointSearcherConnect;
+import com.heebin.smartroute.busAPI.connector.WayPointSearcherConnector;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,6 +13,7 @@ public class RefinedRoute {
     private ArrayList<Station> detailStations;
     private int estimatedDistance;
     private int estimatedTime;
+
     public RefinedRoute(ArrayList<RefinedPath> mainPathes, int estimatedDistance, int estimatedTime, ArrayList<String> relatedBusId){
         this.mainPathes = mainPathes;
         this.estimatedDistance = estimatedDistance;
@@ -22,7 +23,7 @@ public class RefinedRoute {
     }
     private void makeDetailStations(ArrayList<String> relatedBusId) {
 
-        WayPointSearcherConnect wayPointSearcherConnect = new WayPointSearcherConnect();
+        WayPointSearcherConnector wayPointSearcherConnect = new WayPointSearcherConnector();
         ArrayList<ArrayList<Station>> wayPointsList = new ArrayList<ArrayList<Station>>();
 
         for (String s : relatedBusId) {
@@ -31,8 +32,7 @@ public class RefinedRoute {
             wayPointsList.add(wayPointSearcherConnect.postRun());
         }
         Iterator<ArrayList<Station>> itrStation = wayPointsList.iterator();
-        //Iterator<RefinedPath> itrRefinedPath = mainPathes.iterator();
-        //mainPathes
+
         int indexMainPath = 0;
         while (  itrStation.hasNext() && indexMainPath < mainPathes.size()  ) {
             ArrayList<Station> stations = itrStation.next();
@@ -71,5 +71,13 @@ public class RefinedRoute {
             stringBuilder.append("\t");
         });
         return  stringBuilder.toString();
+    }
+
+    public ArrayList<Station> getDetailStations() {
+        return detailStations;
+    }
+
+    public int getEstimatedTime() {
+        return estimatedTime;
     }
 }

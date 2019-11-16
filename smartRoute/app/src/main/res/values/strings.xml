@@ -6,4 +6,9 @@
     <string name="title_activity_init_maps">select location</string>
     <string name="set_home">Let\'s set\nyour home first</string>
     <string name="gobtn">Go</string>
+    <string name="status_button">Status</string>
+    <string name="route_button">Route</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

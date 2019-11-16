@@ -1,8 +1,6 @@
 package com.heebin.smartroute.util;
 
-import com.heebin.smartroute.bean.raw.Path;
 import com.heebin.smartroute.bean.raw.Route;
-import com.heebin.smartroute.bean.raw.Station;
 import com.heebin.smartroute.bean.refined.RefinedPath;
 import com.heebin.smartroute.bean.refined.RefinedRoute;
 import com.heebin.smartroute.bean.userData.BusData;
@@ -15,14 +13,16 @@ public class RouteRefiner {
         gatherBusData(raw);
         return refineRoute(routeDeduplication(raw));
     }
+
     private static void gatherBusData(ArrayList<Route> raw){
         raw.forEach(route -> {
             route.getPathList().forEach(path -> {
-                BusData.getInstance().addFromPath(path);
+                BusData.getInstance().add(path);
             });
         });
 
     }
+
     private static ArrayList<Route> routeDeduplication(ArrayList<Route> raw){
         ArrayList<Route> uniqueRoute = new ArrayList<Route>();
 

@@ -1,8 +1,10 @@
 package com.heebin.smartroute.bean.userData;
 
+import com.heebin.smartroute.bean.raw.Bus;
 import com.heebin.smartroute.bean.raw.Path;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class BusData {
     private BusData(){}
@@ -15,22 +17,35 @@ public class BusData {
         return BusDataHolder.INSTANCE;
     }
 
-    private HashMap<String, String> busNameToBusId = new HashMap<String, String>();
-    private HashMap<String, String> busIdToBusName = new HashMap<String, String>();
 
-    public void addFromPath(Path path){
-        busIdToBusName.put(path.getRouteID(), path.getRouteName());
-        busNameToBusId.put(path.getRouteName(), path.getRouteID());
+    private HashSet<Bus> busList = new HashSet<Bus>();
+
+
+    public void add(Path path){
+       busList.add(new Bus(path.getRouteID(), path.getRouteName()));
     }
-    public void add(String busName, String BusId){
-        busIdToBusName.put(BusId,busName);
-        busNameToBusId.put(busName, BusId);
+    public void add(String busId, String busName){
+        busList.add(new Bus(busId, busName));
     }
+    public void add(Bus bus){
+        busList.add(bus);
+    }
+
     public String getBusId(String busName){
-        return busNameToBusId.get(busName);
+        for (Bus bus : busList) {
+            if(bus.getBusName().equals(busName)){
+                return bus.getBusId();
+            }
+        }
+        return null;
     }
     public String getBusName(String busId){
-        return busIdToBusName.get(busId);
+        for (Bus bus : busList) {
+            if(bus.getBusId().equals(busId)){
+                return bus.getBusName();
+            }
+        }
+        return null;
     }
 
 

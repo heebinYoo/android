@@ -1,4 +1,4 @@
-package com.heebin.smartroute.util;
+package com.heebin.smartroute.busAPI.async;
 
 public interface AsyncTaskCallback {
 
