@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity">
+    tools:context=".view.activity.MainActivity">
 
     <Button
         android:id="@+id/button"
@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/button2" />
 
-    <com.heebin.smartroute.view.ElementView
+    <com.heebin.smartroute.view.custiomView.ElementView
         android:id="@+id/elementView"
         android:layout_width="7dp"
         android:layout_height="6dp"

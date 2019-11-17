@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heebin.smartroute.R;
-import com.heebin.smartroute.bean.refined.RefinedRoute;
+import com.heebin.smartroute.data.bean.refined.RefinedRoute;
 
 import java.util.ArrayList;
 

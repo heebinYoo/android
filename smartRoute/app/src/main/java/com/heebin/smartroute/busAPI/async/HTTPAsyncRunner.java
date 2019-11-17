@@ -3,6 +3,8 @@ package com.heebin.smartroute.busAPI.async;
 import android.os.AsyncTask;
 
 import com.heebin.smartroute.busAPI.connector.Connector;
+import com.heebin.smartroute.util.async.AsyncTaskCallback;
+import com.heebin.smartroute.util.constants.NomalConstants;
 
 public class HTTPAsyncRunner extends AsyncTask<Integer, String, Integer> {
 
@@ -29,6 +31,6 @@ public class HTTPAsyncRunner extends AsyncTask<Integer, String, Integer> {
     protected void onPostExecute(Integer integer) {
         super.onPostExecute(integer);
 
-        asyncTaskCallback.onSuccess("good");
+        asyncTaskCallback.onSuccess(NomalConstants.HTTP_good);
     }
 }

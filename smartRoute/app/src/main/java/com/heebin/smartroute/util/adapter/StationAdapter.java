@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heebin.smartroute.R;
-import com.heebin.smartroute.bean.raw.Station;
+import com.heebin.smartroute.data.bean.raw.Station;
 
 import java.util.ArrayList;
 
