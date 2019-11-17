@@ -1,6 +1,7 @@
 package com.heebin.smartroute.data.bean.raw;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.heebin.smartroute.busAPI.connector.sync.StopBusSearcherConnector;
 
@@ -70,5 +71,19 @@ public class Station {
     @Override
     public String toString() {
         return stationName;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj instanceof Station){
+            Station station = (Station) obj;
+            return (this.stationId.equals(station.stationId) && this.arsId.equals(station.arsId));
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return stationId.hashCode()+ arsId.hashCode();
     }
 }

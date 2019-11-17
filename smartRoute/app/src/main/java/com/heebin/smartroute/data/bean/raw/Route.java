@@ -48,9 +48,9 @@ public class Route {
                if (!this.getPathList().get(i).equivalents(target.getPathList().get(i))) {
                    return false;
                }
-               return true;
 
            }
+           return true;
        }
         return false;
     }

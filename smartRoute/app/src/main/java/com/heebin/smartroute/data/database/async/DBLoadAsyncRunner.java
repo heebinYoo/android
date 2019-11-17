@@ -13,7 +13,9 @@ import com.heebin.smartroute.data.bean.refined.RefinedRoute;
 import com.heebin.smartroute.data.database.DBHelper;
 import com.heebin.smartroute.data.inMemory.caching.StopBusData;
 import com.heebin.smartroute.data.inMemory.caching.WayPointData;
+import com.heebin.smartroute.data.inMemory.initRelated.RefinedPathDataFactory;
 import com.heebin.smartroute.data.inMemory.userData.LodgmentData;
+import com.heebin.smartroute.data.inMemory.userData.RefinedRouteData;
 import com.heebin.smartroute.util.async.AsyncTaskCallback;
 import com.heebin.smartroute.util.constants.DataBaseConstatns;
 
@@ -47,7 +49,7 @@ public class DBLoadAsyncRunner extends AsyncTask<Integer, String, Integer> {
         setLodgment();
         setWayPoint();
         setStopBus();
-
+        setRoute();
         return null;
     }
 
@@ -79,7 +81,7 @@ public class DBLoadAsyncRunner extends AsyncTask<Integer, String, Integer> {
         }
         for (String s : busIdList) {
             ArrayList<Station> stations = new ArrayList<>();
-            c = db.query(DataBaseConstatns.waypoint + " ," + DataBaseConstatns.station, new String[]{DataBaseConstatns.stationId, DataBaseConstatns.stationName, DataBaseConstatns.gpsX, DataBaseConstatns.gpsY, DataBaseConstatns.arsId},
+            c = db.query(DataBaseConstatns.waypoint + " ," + DataBaseConstatns.station, new String[]{DataBaseConstatns.stationId, DataBaseConstatns.stationName, DataBaseConstatns.gpsX, DataBaseConstatns.gpsY, "waypoint."+DataBaseConstatns.arsId},
                     DataBaseConstatns.busId + "=? and " + DataBaseConstatns.waypoint + "." + DataBaseConstatns.arsId + "=" + DataBaseConstatns.station + "." + DataBaseConstatns.arsId, new String[]{s}, null,null, null);
             while(c.moveToNext()){
               Station station = new Station(c.getString(0),c.getString(1), c.getDouble(2), c.getDouble(3), c.getString(4));
@@ -141,10 +143,10 @@ public class DBLoadAsyncRunner extends AsyncTask<Integer, String, Integer> {
                     "where mainpath.rid=?" +
                     "order by mainpath.idx asc", new String[]{rid+""});
             while(pathes.moveToNext()){
-                mainPathes.add(new RefinedPath(pathes.getString(0),pathes.getString(1),pathes.getDouble(2),pathes.getDouble(3),
+                mainPathes.add(RefinedPathDataFactory.getInstance().createPath(pathes.getString(0),pathes.getString(1),pathes.getDouble(2),pathes.getDouble(3),
                         pathes.getString(4),pathes.getString(5),pathes.getDouble(6),pathes.getDouble(7)));
             }
-            refinedo2hRoutes.add(new RefinedRoute(mainPathes, estimatedDistance,estimatedTime,detailStations, 0));
+            refinedh2oRoutes.add(new RefinedRoute(mainPathes, estimatedDistance,estimatedTime,detailStations, 0));
 
 
         }
@@ -170,14 +172,14 @@ public class DBLoadAsyncRunner extends AsyncTask<Integer, String, Integer> {
                     "where mainpath.rid=?" +
                     "order by mainpath.idx asc", new String[]{rid+""});
             while(pathes.moveToNext()){
-                mainPathes.add(new RefinedPath(pathes.getString(0),pathes.getString(1),pathes.getDouble(2),pathes.getDouble(3),
+                mainPathes.add(RefinedPathDataFactory.getInstance().createPath(pathes.getString(0),pathes.getString(1),pathes.getDouble(2),pathes.getDouble(3),
                         pathes.getString(4),pathes.getString(5),pathes.getDouble(6),pathes.getDouble(7)));
             }
             refinedo2hRoutes.add(new RefinedRoute(mainPathes, estimatedDistance,estimatedTime,detailStations, 0));
 
         }
 
-
+        RefinedRouteData.getInstance().setDataFromDB(refinedh2oRoutes,refinedo2hRoutes);
 
 
         }

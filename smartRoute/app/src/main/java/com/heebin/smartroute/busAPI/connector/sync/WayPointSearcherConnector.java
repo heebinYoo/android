@@ -29,6 +29,7 @@ public class WayPointSearcherConnector extends Connector {
     public void preRun(String busId) {
         this.busId = busId;
 
+
     }
 
     @Override

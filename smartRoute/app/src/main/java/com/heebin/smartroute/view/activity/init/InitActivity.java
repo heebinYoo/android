@@ -14,6 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.heebin.smartroute.data.database.async.DBInitAsyncRunner;
+import com.heebin.smartroute.data.inMemory.caching.StopBusData;
+import com.heebin.smartroute.data.inMemory.caching.WayPointData;
+import com.heebin.smartroute.data.inMemory.userData.RefinedRouteData;
 import com.heebin.smartroute.util.constants.NomalConstants;
 import com.heebin.smartroute.R;
 import com.heebin.smartroute.data.inMemory.userData.LodgmentData;
@@ -88,7 +91,10 @@ public class InitActivity extends AppCompatActivity implements AsyncTaskCallback
     @Override
     public void onSuccess(String result) {
         if(result.equals(NomalConstants.HTTP_good)){
-
+            LodgmentData debug = LodgmentData.getInstance();
+            RefinedRouteData data = RefinedRouteData.getInstance();
+            StopBusData data1 = StopBusData.getInstance();
+            WayPointData data2 = WayPointData.getInstance();
             new DBInitAsyncRunner(this, this).execute(1);
         }
         else if(result.equals(NomalConstants.DB_good)) {

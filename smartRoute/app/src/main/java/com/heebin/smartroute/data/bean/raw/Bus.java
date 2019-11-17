@@ -1,6 +1,7 @@
 package com.heebin.smartroute.data.bean.raw;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class Bus {
     private String busId;
@@ -23,5 +24,19 @@ public class Bus {
     @Override
     public String toString() {
         return "bus Id : " + busId + " name : " + busName;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj instanceof Bus){
+            Bus target = (Bus) obj;
+           return (this.busId.equals(target.busId) && this.busName.equals(target.busName));
+        }
+         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.busName.hashCode() + this.busId.hashCode();
     }
 }

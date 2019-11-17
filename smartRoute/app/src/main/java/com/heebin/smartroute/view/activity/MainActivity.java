@@ -12,6 +12,10 @@ import android.widget.Button;
 
 import com.heebin.smartroute.R;
 import com.heebin.smartroute.data.database.async.DBLoadAsyncRunner;
+import com.heebin.smartroute.data.inMemory.caching.StopBusData;
+import com.heebin.smartroute.data.inMemory.caching.WayPointData;
+import com.heebin.smartroute.data.inMemory.userData.LodgmentData;
+import com.heebin.smartroute.data.inMemory.userData.RefinedRouteData;
 import com.heebin.smartroute.util.async.AsyncTaskCallback;
 import com.heebin.smartroute.util.constants.NomalConstants;
 import com.heebin.smartroute.view.activity.init.InitActivity;
@@ -53,6 +57,12 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     @Override
     public void onSuccess(String result) {
         if(NomalConstants.DB_LOAD_good==result){
+
+            //LodgmentData debug = LodgmentData.getInstance();
+            RefinedRouteData data = RefinedRouteData.getInstance();
+           //StopBusData data1 = StopBusData.getInstance();
+            //WayPointData data2 = WayPointData.getInstance();
+
             dialog.dismiss();
         }
     }

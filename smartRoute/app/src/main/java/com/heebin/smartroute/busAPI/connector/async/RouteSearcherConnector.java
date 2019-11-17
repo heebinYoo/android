@@ -116,7 +116,7 @@ public class RouteSearcherConnector extends Connector {
                     Route data;
                     int distance =Integer.parseInt(fstElmnt.getElementsByTagName("distance").item(0).getChildNodes().item(0).getNodeValue());
                     int time = Integer.parseInt(fstElmnt.getElementsByTagName("time").item(0).getChildNodes().item(0).getNodeValue());
-                    data = new Route(distance, time);
+                    data = new Route(time, distance);
 
                     NodeList pathList = fstElmnt.getElementsByTagName("pathList");
 
@@ -154,7 +154,7 @@ public class RouteSearcherConnector extends Connector {
                     Route data;
                     int distance =Integer.parseInt(fstElmnt.getElementsByTagName("distance").item(0).getChildNodes().item(0).getNodeValue());
                     int time = Integer.parseInt(fstElmnt.getElementsByTagName("time").item(0).getChildNodes().item(0).getNodeValue());
-                    data = new Route(distance, time);
+                    data = new Route(time, distance);
 
                     NodeList pathList = fstElmnt.getElementsByTagName("pathList");
 

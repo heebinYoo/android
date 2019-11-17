@@ -41,8 +41,8 @@ public class RefinedRoute {
             wayPointSearcherConnect.run();
             wayPointsList.add(wayPointSearcherConnect.postRun());
         }
-        Iterator<ArrayList<Station>> itrStation = wayPointsList.iterator();
 
+        Iterator<ArrayList<Station>> itrStation = wayPointsList.iterator();
         int indexMainPath = 0;
         while (  itrStation.hasNext() && indexMainPath < mainPathes.size()  ) {
             ArrayList<Station> stations = itrStation.next();

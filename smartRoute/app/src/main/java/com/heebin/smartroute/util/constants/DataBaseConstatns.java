@@ -25,7 +25,8 @@ public class DataBaseConstatns {
             gpsY +
             " double," +
             arsId +
-            " TEXT primary key);";
+            " TEXT, " +
+            "primary key(arsId, stationId));";
 
 
     public static final String bus ="bus";
@@ -44,7 +45,7 @@ public class DataBaseConstatns {
             "" +
             "(" +
             busId +
-            " TEXT primary key," +
+            " TEXT , " +
             arsId +
             " TEXT," +
             "FOREIGN KEY(" +
@@ -60,7 +61,8 @@ public class DataBaseConstatns {
             bus +
             "(" +
             arsId +
-            "));";
+            ")" +
+            "primary key(busId, arsId));";
 
     public static final String stopbus ="stopbus";
     public static final   String create_stopbus = "create table "+stopbus +
@@ -85,14 +87,14 @@ public class DataBaseConstatns {
 
 
     public static final  String create_path = "create table "+path +
-            "("+takeId +"TEXT," +
-            takeName +"TEXT," +
-            takeX +"DOUBLE," +
-            takeY +"DOUBLE," +
-            offId +"TEXT," +
-            offName +"TEXT," +
-            offX +"DOUBLE," +
-            offY +"DOUBLE," +
+            "("+takeId +" TEXT," +
+            takeName +" TEXT," +
+            takeX +" DOUBLE," +
+            takeY +" DOUBLE," +
+            offId +" TEXT," +
+            offName +" TEXT," +
+            offX +" DOUBLE," +
+            offY +" DOUBLE," +
             "primary key("+takeId+"," +offId+")" +
             ");";
 
@@ -121,7 +123,7 @@ public class DataBaseConstatns {
             rid +" integer," +
             arsId +" TEXT," +
             idx +" integer," +
-            "primary key("+rid+", "+arsId+")," +
+            "primary key("+rid+", "+arsId+", idx)," +
             "FOREIGN KEY("+rid+") REFERENCES route("+rid+")," +
             "FOREIGN KEY("+arsId+") REFERENCES "+station+"("+arsId+")" +
             ");";

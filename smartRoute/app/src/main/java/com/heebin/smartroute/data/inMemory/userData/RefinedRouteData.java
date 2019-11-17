@@ -1,8 +1,11 @@
 package com.heebin.smartroute.data.inMemory.userData;
 
+import com.heebin.smartroute.data.bean.raw.Bus;
 import com.heebin.smartroute.data.bean.raw.Route;
 import com.heebin.smartroute.data.bean.refined.RefinedPath;
 import com.heebin.smartroute.data.bean.refined.RefinedRoute;
+import com.heebin.smartroute.data.inMemory.initRelated.RefinedPathDataFactory;
+import com.heebin.smartroute.data.inMemory.initRelated.RelatedBusData;
 
 import java.util.ArrayList;
 
@@ -61,11 +64,15 @@ public class RefinedRouteData {
             RefinedRoute refinedRoute;
             ArrayList<RefinedPath> mainPathes = new ArrayList<RefinedPath>();
             ArrayList<String> relatedBusId = new ArrayList<String>();
-
+            ArrayList<String> relatedBusName = new ArrayList<String>();
             route.getPathList().forEach(path -> {
-                mainPathes.add(new RefinedPath(path));
+                mainPathes.add(RefinedPathDataFactory.getInstance().createPath(path));
                 relatedBusId.add(path.getRouteID());
+                relatedBusName.add(path.getRouteName());
             });
+            for (int i = 0; i < relatedBusId.size(); i++) {
+                RelatedBusData.getInstance().add(new Bus(relatedBusId.get(i), relatedBusName.get(i)));
+            }
 
             refinedRoute = new RefinedRoute(mainPathes, route.getDistance(), route.getTime(), relatedBusId);
 

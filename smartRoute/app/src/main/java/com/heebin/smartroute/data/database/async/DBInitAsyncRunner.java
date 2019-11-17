@@ -3,6 +3,8 @@ package com.heebin.smartroute.data.database.async;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
@@ -13,6 +15,8 @@ import com.heebin.smartroute.data.bean.refined.RefinedRoute;
 import com.heebin.smartroute.data.database.DBHelper;
 import com.heebin.smartroute.data.inMemory.caching.StopBusData;
 import com.heebin.smartroute.data.inMemory.caching.WayPointData;
+import com.heebin.smartroute.data.inMemory.initRelated.RefinedPathDataFactory;
+import com.heebin.smartroute.data.inMemory.initRelated.RelatedBusData;
 import com.heebin.smartroute.data.inMemory.userData.RefinedRouteData;
 import com.heebin.smartroute.util.async.AsyncTaskCallback;
 import com.heebin.smartroute.util.constants.DataBaseConstatns;
@@ -73,15 +77,21 @@ public class DBInitAsyncRunner extends AsyncTask<Integer, String, Integer> {
             contentValues.put(DataBaseConstatns.gpsX, station.getGpsX());
             contentValues.put(DataBaseConstatns.gpsY, station.getGpsY());
             contentValues.put(DataBaseConstatns.arsId, station.getArsId());
-            db.insert(DataBaseConstatns.station,null, contentValues);
+            try {
+                db.insert(DataBaseConstatns.station, null, contentValues);
+            }
+            catch (SQLiteConstraintException e){
+
+            }
         }
     }
     private void insertBus(){
         ContentValues contentValues;
-        Iterator<ArrayList<Bus>> stopBusesListIterator = StopBusData.getInstance().getStopBusesListIterator();
+
         HashSet<Bus> buses = new HashSet();
-        while(stopBusesListIterator.hasNext()){
-            buses.addAll(stopBusesListIterator.next());
+
+        for (Bus bus : RelatedBusData.getInstance().getBuses()) {
+            buses.add(bus);
         }
         Iterator<Bus> busIterator = buses.iterator();
         while (busIterator.hasNext()){
@@ -95,20 +105,28 @@ public class DBInitAsyncRunner extends AsyncTask<Integer, String, Integer> {
     private void insertPath(){
         ContentValues contentValues;
 
-        for (RefinedRoute route : RefinedRouteData.getInstance().getRefinedh2oRoutes()) {
-            for (RefinedPath path : route.getMainPathes()) {
-                contentValues = new ContentValues();
-                contentValues.put(DataBaseConstatns.takeId, path.getTakeId());
-                contentValues.put(DataBaseConstatns.takeName, path.getTakeName());
-                contentValues.put(DataBaseConstatns.takeX, path.getTakeX());
-                contentValues.put(DataBaseConstatns.takeY, path.getTakeY());
-                contentValues.put(DataBaseConstatns.offId, path.getOffId());
-                contentValues.put(DataBaseConstatns.offName, path.getOffName());
-                contentValues.put(DataBaseConstatns.offX, path.getOffX());
-                contentValues.put(DataBaseConstatns.offY, path.getOffY());
-                db.insert(DataBaseConstatns.path,null, contentValues);
+       Iterator<RefinedPath> itr =  RefinedPathDataFactory.getInstance().getPaths().iterator();
+
+        while(itr.hasNext()){
+            RefinedPath path = itr.next();
+            contentValues = new ContentValues();
+            contentValues.put(DataBaseConstatns.takeId, path.getTakeId());
+            contentValues.put(DataBaseConstatns.takeName, path.getTakeName());
+            contentValues.put(DataBaseConstatns.takeX, path.getTakeX());
+            contentValues.put(DataBaseConstatns.takeY, path.getTakeY());
+            contentValues.put(DataBaseConstatns.offId, path.getOffId());
+            contentValues.put(DataBaseConstatns.offName, path.getOffName());
+            contentValues.put(DataBaseConstatns.offX, path.getOffX());
+            contentValues.put(DataBaseConstatns.offY, path.getOffY());
+            try{
+                db.insert(DataBaseConstatns.path, null, contentValues);
+            }
+            catch (SQLiteConstraintException e){
+
             }
         }
+
+
     }
 
     private void insertRoute(){
@@ -118,8 +136,8 @@ public class DBInitAsyncRunner extends AsyncTask<Integer, String, Integer> {
             contentValues.put(DataBaseConstatns.estimatedDistance, route.getEstimatedDistance());
             contentValues.put(DataBaseConstatns.estimatedTime, route.getEstimatedTime());
             contentValues.put(DataBaseConstatns.type, DataBaseConstatns.TYPE_H2O);
-            db.insert(DataBaseConstatns.route,null, contentValues);
-            int routePrime = getHighestID(DataBaseConstatns.route);
+            long routePrime = db.insert(DataBaseConstatns.route,null, contentValues);
+
 
             for (int i = 0; i < route.getDetailStations().size(); i++) {
                 Station station = route.getDetailStations().get(i);
@@ -127,6 +145,7 @@ public class DBInitAsyncRunner extends AsyncTask<Integer, String, Integer> {
                 contentValues.put(DataBaseConstatns.rid, routePrime);
                 contentValues.put(DataBaseConstatns.arsId, station.getArsId());
                 contentValues.put(DataBaseConstatns.idx, i);
+                db.insert(DataBaseConstatns.detailedstation, null, contentValues);
             }
 
             for (int i = 0; i < route.getMainPathes().size(); i++) {
@@ -136,20 +155,43 @@ public class DBInitAsyncRunner extends AsyncTask<Integer, String, Integer> {
                 contentValues.put(DataBaseConstatns.takeId, path.getTakeId());
                 contentValues.put(DataBaseConstatns.offId, path.getOffId());
                 contentValues.put(DataBaseConstatns.idx, i);
+                db.insert(DataBaseConstatns.mainpath, null, contentValues);
+            }
+
+        }
+
+        for (RefinedRoute route : RefinedRouteData.getInstance().getRefinedo2hRoutes()) {
+            contentValues = new ContentValues();
+            contentValues.put(DataBaseConstatns.estimatedDistance, route.getEstimatedDistance());
+            contentValues.put(DataBaseConstatns.estimatedTime, route.getEstimatedTime());
+            contentValues.put(DataBaseConstatns.type, DataBaseConstatns.TYPE_O2H);
+            long routePrime = db.insert(DataBaseConstatns.route,null, contentValues);
+
+
+            for (int i = 0; i < route.getDetailStations().size(); i++) {
+                Station station = route.getDetailStations().get(i);
+                contentValues = new ContentValues();
+                contentValues.put(DataBaseConstatns.rid, routePrime);
+                contentValues.put(DataBaseConstatns.arsId, station.getArsId());
+                contentValues.put(DataBaseConstatns.idx, i);
+                db.insert(DataBaseConstatns.detailedstation, null, contentValues);
+            }
+
+            for (int i = 0; i < route.getMainPathes().size(); i++) {
+                RefinedPath path = route.getMainPathes().get(i);
+                contentValues = new ContentValues();
+                contentValues.put(DataBaseConstatns.rid, routePrime);
+                contentValues.put(DataBaseConstatns.takeId, path.getTakeId());
+                contentValues.put(DataBaseConstatns.offId, path.getOffId());
+                contentValues.put(DataBaseConstatns.idx, i);
+                db.insert(DataBaseConstatns.mainpath, null, contentValues);
             }
 
         }
 
     }
 
-    public int getHighestID(String tableName) {
-        final String MY_QUERY = "SELECT MAX(_id) FROM " + tableName;
-        Cursor cur = db.rawQuery(MY_QUERY, null);
-        cur.moveToFirst();
-        int ID = cur.getInt(0);
-        cur.close();
-        return ID;
-    }
+
 
 
 
@@ -163,7 +205,12 @@ public class DBInitAsyncRunner extends AsyncTask<Integer, String, Integer> {
                 contentValues = new ContentValues();
                 contentValues.put(DataBaseConstatns.busId, busId);
                 contentValues.put(DataBaseConstatns.arsId, station.getArsId());
-                db.insert(DataBaseConstatns.waypoint,null, contentValues);
+                try{
+                db.insertOrThrow(DataBaseConstatns.waypoint,null, contentValues);
+                }
+                catch (SQLException e){
+                    continue;
+                }
             }
         }
     }

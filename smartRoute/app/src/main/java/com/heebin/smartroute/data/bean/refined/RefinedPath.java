@@ -1,6 +1,7 @@
 package com.heebin.smartroute.data.bean.refined;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.heebin.smartroute.data.bean.raw.Path;
 import com.heebin.smartroute.data.bean.raw.Station;
@@ -97,5 +98,23 @@ public class RefinedPath {
 
     public double getOffY() {
         return offY;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getTakeId().hashCode() + this.getOffId().hashCode();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj instanceof RefinedPath){
+            RefinedPath path = (RefinedPath) obj;
+            return (this.takeId.equals(path.takeId) && this.offId.equals(path.offId));
+        }
+        else {
+            return false;
+        }
+
+
     }
 }
