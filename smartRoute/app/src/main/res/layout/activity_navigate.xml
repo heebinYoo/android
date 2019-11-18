@@ -8,13 +8,12 @@
 
     <FrameLayout
         android:id="@+id/main_fragment"
-        android:layout_width="101dp"
-        android:layout_height="64dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/route">
+        app:layout_constraintTop_toBottomOf="@id/divider3">
 
     </FrameLayout>
 
@@ -23,11 +22,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/route_button"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/main_fragment"
         app:layout_constraintLeft_toRightOf="@id/status"
         app:layout_constraintRight_toLeftOf="@id/status"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/status"
@@ -37,7 +38,8 @@
         app:layout_constraintBottom_toTopOf="@id/main_fragment"
         app:layout_constraintLeft_toRightOf="@id/route"
         app:layout_constraintRight_toLeftOf="@id/good"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/good"
@@ -47,7 +49,8 @@
         app:layout_constraintBottom_toTopOf="@+id/main_fragment"
         app:layout_constraintLeft_toRightOf="@id/status"
         app:layout_constraintRight_toLeftOf="@id/bad"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/bad"
@@ -57,5 +60,15 @@
         app:layout_constraintBottom_toTopOf="@+id/main_fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@id/good"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/status" />
 </androidx.constraintlayout.widget.ConstraintLayout>

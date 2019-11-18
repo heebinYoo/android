@@ -9,21 +9,24 @@ import java.util.HashSet;
 public class BusStationMatrix {
     private RefinedRoute targetRoute;
     private ArrayList<Station> detailStations;
-    private ArrayList<Bus> relatedBus = new ArrayList<Bus>();
+    private ArrayList<Bus> relatedBus;
 
     private boolean[][] busStationMatrix;
 
     public BusStationMatrix(RefinedRoute refinedRoute){
         this.targetRoute = refinedRoute;
-        detailStations =targetRoute.getDetailStations();
-        int numOfStation = targetRoute.getDetailStations().size();
+        this.detailStations =this.targetRoute.getDetailStations();
+        this.relatedBus = new ArrayList<Bus>();
 
         HashSet<Bus> relatedBusSet = new HashSet<Bus>();
-
         targetRoute.getDetailStations().forEach(station -> {
             relatedBusSet.addAll(station.getStopBusList(true));
         });
-        int numOfBus = relatedBusSet.size();
+        relatedBus.addAll(relatedBusSet);
+
+        int numOfBus = relatedBus.size();
+        int numOfStation = this.targetRoute.getDetailStations().size();
+
 
         busStationMatrix = new boolean[numOfBus][numOfStation];
 
@@ -35,5 +38,22 @@ public class BusStationMatrix {
 
     }
 
+    public ArrayList<Station> getDetailStations() {
+        return detailStations;
+    }
 
+
+    public ArrayList<Bus> getRelatedBus() {
+        return relatedBus;
+    }
+
+    public ArrayList<Bus> getAvailableBus(int indexOfStation){
+        ArrayList<Bus> result = new ArrayList<Bus>();
+        for(int i = 0; i<relatedBus.size(); i++) {
+           if(busStationMatrix[i][indexOfStation]) {
+               result.add(relatedBus.get(i));
+           }
+        }
+        return result;
+    }
 }

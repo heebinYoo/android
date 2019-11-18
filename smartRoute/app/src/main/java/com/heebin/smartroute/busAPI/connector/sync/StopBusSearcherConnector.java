@@ -1,7 +1,9 @@
 package com.heebin.smartroute.busAPI.connector.sync;
 
 import com.heebin.smartroute.busAPI.connector.Connector;
+import com.heebin.smartroute.data.bean.meta.StopBus;
 import com.heebin.smartroute.data.bean.raw.Bus;
+import com.heebin.smartroute.data.database.async.DBInsertStopBusAsyncRunner;
 import com.heebin.smartroute.data.inMemory.caching.StopBusData;
 
 
@@ -46,6 +48,7 @@ public class StopBusSearcherConnector extends Connector {
 
                 parse(this.get(this.makeURL(urlBody, prop)));
                 StopBusData.getInstance().add(this.arsId, this.busList);
+
             }
 
         }

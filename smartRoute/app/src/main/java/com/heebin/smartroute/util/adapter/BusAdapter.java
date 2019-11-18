@@ -18,7 +18,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
     OnItemClickListener onItemClickListener;
     ArrayList<Bus> mData;
 
-    public BusAdapter(OnItemClickListener onItemClickListener, ArrayList<Bus> mData){
+    public BusAdapter(ArrayList<Bus> mData, OnItemClickListener onItemClickListener){
         this.mData=mData;
         this.onItemClickListener=onItemClickListener;
     }

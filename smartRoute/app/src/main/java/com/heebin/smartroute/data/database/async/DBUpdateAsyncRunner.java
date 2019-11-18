@@ -2,6 +2,8 @@ package com.heebin.smartroute.data.database.async;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
@@ -18,11 +20,11 @@ import java.util.Iterator;
 public class DBUpdateAsyncRunner extends AsyncTask<Integer, String, Integer> {
 
     private Context context;
-    private AsyncTaskCallback asyncTaskCallback;
+
     private SQLiteDatabase db;
-    public DBUpdateAsyncRunner(Context context, AsyncTaskCallback asyncTaskCallback){
+    public DBUpdateAsyncRunner(Context context){
         this.context = context;
-        this.asyncTaskCallback = asyncTaskCallback;
+
     }
 
     @Override
@@ -51,7 +53,12 @@ public class DBUpdateAsyncRunner extends AsyncTask<Integer, String, Integer> {
             contentValues = new ContentValues();
             contentValues.put(DataBaseConstatns.busId, bus.getBusId());
             contentValues.put(DataBaseConstatns.busName,bus.getBusName());
-            db.insert(DataBaseConstatns.bus,null, contentValues);
+            try {
+                db.insertWithOnConflict(DataBaseConstatns.bus, null, contentValues,SQLiteDatabase.CONFLICT_IGNORE);
+            }
+            catch (SQLiteConstraintException e){
+
+            }
         }
     }
 }
