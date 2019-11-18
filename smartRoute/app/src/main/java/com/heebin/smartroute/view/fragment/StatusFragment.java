@@ -20,14 +20,24 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.heebin.smartroute.R;
+import com.heebin.smartroute.busAPI.async.HTTPAsyncRunner;
+import com.heebin.smartroute.busAPI.connector.Connector;
+import com.heebin.smartroute.busAPI.connector.async.NearStationSearcherConnector;
+import com.heebin.smartroute.busAPI.connector.async.RouteSearcherConnector;
+import com.heebin.smartroute.busAPI.connector.async.StationArriveSearcherConnector;
+import com.heebin.smartroute.data.bean.meta.Coord;
 import com.heebin.smartroute.data.bean.raw.Bus;
 import com.heebin.smartroute.data.bean.raw.Station;
 import com.heebin.smartroute.learning.Matrix.BusStationMatrixHolder;
 import com.heebin.smartroute.util.Distance;
 import com.heebin.smartroute.util.adapter.BusAdapter;
 import com.heebin.smartroute.util.adapter.StationAdapter;
+import com.heebin.smartroute.util.async.AsyncTaskCallback;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,7 +45,7 @@ import java.util.TimerTask;
 import static android.location.LocationManager.GPS_PROVIDER;
 
 
-public class StatusFragment extends Fragment implements BusAdapter.OnItemClickListener, StationAdapter.OnItemClickListener,LocationListener {
+public class StatusFragment extends Fragment implements BusAdapter.OnItemClickListener, StationAdapter.OnItemClickListener,LocationListener, AsyncTaskCallback {
 
     private OnStatusFragmentListener mListener;
     private Context context;
@@ -46,6 +56,7 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
     private ArrayList<Station> stations=new ArrayList<Station>();
     private ArrayList<Bus> buses = new ArrayList<Bus>();
 
+    private StationArriveSearcherConnector stationArriveSearcherConnector;
 
         @Override
         public void onLocationChanged(Location location) {
@@ -116,7 +127,6 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
 
         //HashSet<Bus> busHashSet = new HashSet<Bus>();
 
-
         for (int i = 0; i < BusStationMatrixHolder.getInstance().getDetailStations().size(); i++) {
             Station station = BusStationMatrixHolder.getInstance().getDetailStations().get(i);
             if(Distance.distance(location.getLatitude(),location.getLongitude(),station.getGpsY(),station.getGpsX())<1000){
@@ -125,6 +135,12 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
             }
         }
         //buses.addAll(busHashSet);
+
+        stationArriveSearcherConnector  = new StationArriveSearcherConnector();
+        stationArriveSearcherConnector.preRun(stations);
+        Connector[] connector = {stationArriveSearcherConnector};
+        new HTTPAsyncRunner(this, connector).execute(1);
+
 
     }
 
@@ -140,7 +156,7 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
         }
 
 
-        Timer timer = new Timer(true); //인자가 Daemon 설정인데 true 여야 죽지 않음.
+        Timer timer = new Timer(true);
         Handler handler = new Handler();
         timer.schedule(new TimerTask() {
             @Override
@@ -154,7 +170,7 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
                     }
                 });
             }
-        }, 0, 5000); //시작지연시간 0, 주기 10초
+        }, 0, 5000);
 
 
 
@@ -165,6 +181,31 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onSuccess(String s) {
+        HashMap<Bus, Coord> result = stationArriveSearcherConnector.postRun();
+        buses.addAll(result .keySet());
+
+        Collections.sort(buses, new Comparator<Bus>() {
+            @Override
+            public int compare(Bus bus, Bus t1) {
+               if( Distance.distance(location.getLatitude(),location.getLongitude(),result.get(bus).Y,result.get(bus).X)>
+                Distance.distance(location.getLatitude(),location.getLongitude(),result.get(t1).Y,result.get(t1).X)){
+                   return -1;
+               }
+                return 1;
+            }
+        });
+
+        busAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onFailure(Exception e) {
+
     }
 
 

@@ -32,7 +32,7 @@ public class NearStationData {
             }
         }
         /////////////////////////////////////////
-        return new ArrayList<SrcDstStation>(result.subList(0, 3)); //result 로 바꾸기
+        return result;
         //////////////////////////////////
     }
 
@@ -44,7 +44,7 @@ public class NearStationData {
             }
         }
         /////////////////////////////////////////
-        return new ArrayList<SrcDstStation>(result.subList(0, 3)); //result 로 바꾸기
+        return result;
         /////////////////////////////////////////
     }
 
