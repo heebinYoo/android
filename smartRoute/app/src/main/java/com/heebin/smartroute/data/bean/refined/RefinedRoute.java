@@ -78,7 +78,7 @@ public class RefinedRoute {
         StringBuilder stringBuilder = new StringBuilder();
         mainPathes.forEach(refinedPath -> {
             stringBuilder.append(refinedPath.toString());
-            stringBuilder.append("\t");
+            stringBuilder.append(" ");
         });
         return  stringBuilder.toString();
     }

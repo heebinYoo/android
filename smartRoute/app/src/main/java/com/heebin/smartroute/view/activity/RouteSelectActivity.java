@@ -54,7 +54,10 @@ public class RouteSelectActivity extends AppCompatActivity implements RefinedRou
         Intent i = new Intent(this, NavigateActivity.class);
         i.putExtra("selected_route", position);
         i.putExtra("ish20", mode);
-        list.get(position);
+        Log.d("RouteSelectActivity", "onItemClick: " + list.get(position).toString());
+        startActivity(i);
+        finish();
+
 
     }
 }

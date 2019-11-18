@@ -27,9 +27,30 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button office = findViewById(R.id.button); //office
-        Button home = findViewById(R.id.button2); //home
+        Button toOffice = findViewById(R.id.button); //office
+        Button toHome = findViewById(R.id.button2); //home
         Button init = findViewById(R.id.button3); //init
+
+
+        toOffice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, RouteSelectActivity.class);
+                i.putExtra("ish2o", NomalConstants.homeToOffice);
+                startActivity(i);
+
+            }
+        });
+
+        toHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, RouteSelectActivity.class);
+                i.putExtra("ish2o", NomalConstants.officeToHome);
+                startActivity(i);
+
+            }
+        });
 
 
         SharedPreferences sharedPreferences = getSharedPreferences("init", Context.MODE_PRIVATE);

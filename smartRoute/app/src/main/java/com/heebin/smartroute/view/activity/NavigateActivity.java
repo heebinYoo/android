@@ -34,7 +34,6 @@ public class NavigateActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_navigate);
         Intent i = getIntent();
         int selected_route = i.getIntExtra("selected_route",-1);
-
         mode= i.getIntExtra("ish20",-1);
 
         switch (mode){

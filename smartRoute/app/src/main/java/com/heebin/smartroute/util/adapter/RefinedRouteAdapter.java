@@ -43,6 +43,7 @@ public class RefinedRouteAdapter extends RecyclerView.Adapter<RefinedRouteAdapte
 
     public RefinedRouteAdapter(ArrayList<RefinedRoute> list, OnItemClickListener onItemClickListener) {
         mData = list ;
+        this.onItemClickListener =onItemClickListener;
     }
 
 
@@ -62,7 +63,7 @@ public class RefinedRouteAdapter extends RecyclerView.Adapter<RefinedRouteAdapte
     public void onBindViewHolder(RefinedRouteAdapter.ViewHolder holder, int position) {
         RefinedRoute refinedRoute = mData.get(position) ;
         holder.route.setText(refinedRoute.toString()) ;
-        holder.estimatedTime.setText(refinedRoute.getEstimatedTime());
+        holder.estimatedTime.setText(refinedRoute.getEstimatedTime()+"");
         holder.select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
