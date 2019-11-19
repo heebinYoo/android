@@ -107,12 +107,17 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
 
         HashSet<Bus> busHashSet = new HashSet<Bus>();///////곧 지우시길
 
-        for (int i = 0; i < BusStationMatrixHolder.getInstance().getDetailStations().size(); i++) {
-            Station station = BusStationMatrixHolder.getInstance().getDetailStations().get(i);
-            if(Distance.distance(location.getLatitude(),location.getLongitude(),station.getGpsY(),station.getGpsX())<1000){
-                stations.add(station);
-                busHashSet.addAll(BusStationMatrixHolder.getInstance().getAvailableBus(i));///////곧 지우시길
+        try {
+            for (int i = 0; i < BusStationMatrixHolder.getInstance().getDetailStations().size(); i++) {
+                Station station = BusStationMatrixHolder.getInstance().getDetailStations().get(i);
+                if (Distance.distance(location.getLatitude(), location.getLongitude(), station.getGpsY(), station.getGpsX()) < 1000) {
+                    stations.add(station);
+                    busHashSet.addAll(BusStationMatrixHolder.getInstance().getAvailableBus(i));///////곧 지우시길
+                }
             }
+        }
+        catch (NullPointerException e){
+            return;
         }
 
         buses.addAll(busHashSet);///////곧 지우시길

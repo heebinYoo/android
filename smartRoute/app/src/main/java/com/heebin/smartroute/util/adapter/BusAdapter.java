@@ -39,7 +39,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull BusAdapter.ViewHolder holder, int position) {
         Bus bus = mData.get(position) ;
         holder.name.setText(bus.getBusName()) ;
-        holder.score.setText("TODO");
+        holder.score.setText("");
 
     }
 

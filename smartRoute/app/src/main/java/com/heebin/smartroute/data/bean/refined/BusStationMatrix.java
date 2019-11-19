@@ -42,6 +42,9 @@ public class BusStationMatrix {
         return detailStations;
     }
 
+    public RefinedRoute getTargetRoute() {
+        return targetRoute;
+    }
 
     public ArrayList<Bus> getRelatedBus() {
         return relatedBus;
