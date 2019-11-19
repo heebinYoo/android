@@ -88,7 +88,6 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
                     + " must implement OnFragmentInteractionListener");
         }
 
-
         makeLoop();
 
 
@@ -106,27 +105,25 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
 
         stations.clear();
 
-        //HashSet<Bus> busHashSet = new HashSet<Bus>();
+        HashSet<Bus> busHashSet = new HashSet<Bus>();///////곧 지우시길
 
         for (int i = 0; i < BusStationMatrixHolder.getInstance().getDetailStations().size(); i++) {
             Station station = BusStationMatrixHolder.getInstance().getDetailStations().get(i);
             if(Distance.distance(location.getLatitude(),location.getLongitude(),station.getGpsY(),station.getGpsX())<1000){
                 stations.add(station);
-                //busHashSet.addAll(BusStationMatrixHolder.getInstance().getAvailableBus(i));
+                busHashSet.addAll(BusStationMatrixHolder.getInstance().getAvailableBus(i));///////곧 지우시길
             }
         }
-        //buses.addAll(busHashSet);
 
-        if(!isOnBusDataLoading) {
+        buses.addAll(busHashSet);///////곧 지우시길
+
+        if(!isOnBusDataLoading && false) {
             Log.d("setList", "setList: newly load nearest bus");
             isOnBusDataLoading = true;
             stationArriveSearcherConnector = new StationArriveSearcherConnector();
-            stationArriveSearcherConnector.preRun(stations);
+            stationArriveSearcherConnector.preRun(stations, location);
             Connector[] connector = {stationArriveSearcherConnector};
             new HTTPAsyncRunner(this, connector).execute(1);
-        }
-        else {
-            Log.d("setList", "setList: in loading, ignore HTTP");
         }
 
 
@@ -156,10 +153,8 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
             public void run() {
                 handler.post(new Runnable(){
                     public void run(){
-
                         setList();
                         stationAdapter.notifyDataSetChanged();
-
                     }
                 });
             }
@@ -171,7 +166,7 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
 
     @Override
     public void onSuccess(String s) {
-        isOnBusDataLoading=false;
+
         HashMap<Bus, Coord> result = stationArriveSearcherConnector.postRun();
 
         buses.clear();
@@ -187,9 +182,8 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
                 return -1;
             }
         });
-
         busAdapter.notifyDataSetChanged();
-
+        isOnBusDataLoading=false;
     }
 
     @Override
