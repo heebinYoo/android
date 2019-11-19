@@ -1,5 +1,6 @@
 package com.heebin.smartroute.data.bean.meta;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class Coord {
@@ -27,5 +28,11 @@ public class Coord {
 
 
         return (int) X+ (int)Y;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return String.format("%.6f", Y) + ", " +String.format("%.6f", X);
     }
 }

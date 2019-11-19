@@ -4,6 +4,7 @@ import com.heebin.smartroute.busAPI.connector.Connector;
 import com.heebin.smartroute.data.bean.meta.Coord;
 import com.heebin.smartroute.data.bean.raw.Bus;
 import com.heebin.smartroute.data.bean.raw.Station;
+import com.heebin.smartroute.learning.Matrix.BusStationMatrixHolder;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -23,8 +24,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class StationArriveSearcherConnector extends Connector {
 
-    private static final String urlBody = "http://ws.bus.go.kr/api/rest/stationinfo/getStationByUid";
-    private ArrayList<String> arsIds;
+    private static final String urlBody = "http://ws.bus.go.kr/api/rest/buspos/getBusPosByRtid";
+
+    private ArrayList<String> interestedStIds;
+    private ArrayList<String> interestedBusIds;
     private HashMap<Bus, Coord> nearBuses;
 
     public HashMap<Bus, Coord> postRun() {
@@ -32,11 +35,23 @@ public class StationArriveSearcherConnector extends Connector {
     }
 
     public void preRun(ArrayList<Station> stations){
-        arsIds = new ArrayList<String>();
+
+        interestedStIds = new ArrayList<String>();
+        interestedBusIds = new ArrayList<String>();
+
+
         nearBuses = new HashMap<Bus, Coord>();
 
         for (Station station : stations) {
-            arsIds.add(station.getArsId());
+
+           int matIdx = BusStationMatrixHolder.getInstance().getDetailStations().indexOf(station);
+
+            BusStationMatrixHolder.getInstance().getAvailableBus(matIdx).forEach(bus -> {
+                interestedBusIds.add(bus.getBusId());
+
+            });
+
+            interestedStIds.add(station.getStationId());
         }
 
     }
@@ -46,11 +61,11 @@ public class StationArriveSearcherConnector extends Connector {
         HashMap<String, String> prop;
 
         String result;
-        for (String arsId : arsIds) {
+        for (String busId : interestedBusIds) {
             prop = new HashMap<String, String>();
             prop.put("serviceKey", super.serviceKey);
+            prop.put("busRouteId", busId);
 
-            prop.put("arsId", arsId);
             result = this.get(this.makeURL(urlBody, prop));
             parse(result);
         }
@@ -70,12 +85,17 @@ public class StationArriveSearcherConnector extends Connector {
             for(int i = 0; i< nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
                 Element fstElmnt = (Element) node;
-                this.nearBuses.put(
-                new Bus(fstElmnt.getElementsByTagName("busRouteId").item(0).getChildNodes().item(0).getNodeValue(),
-                        fstElmnt.getElementsByTagName("rtNm").item(0).getChildNodes().item(0).getNodeValue()),
-                        new Coord(Double.parseDouble( fstElmnt.getElementsByTagName("gpsX").item(0).getChildNodes().item(0).getNodeValue()),
-                                Double.parseDouble(  fstElmnt.getElementsByTagName("gpsY").item(0).getChildNodes().item(0).getNodeValue())));
 
+               String nextStId = fstElmnt.getElementsByTagName("nextStId").item(0).getChildNodes().item(0).getNodeValue();
+               if(interestedStIds.contains(nextStId)){
+
+                   this.nearBuses.put(
+                           new Bus(fstElmnt.getElementsByTagName("busRouteId").item(0).getChildNodes().item(0).getNodeValue(),
+                                   fstElmnt.getElementsByTagName("rtNm").item(0).getChildNodes().item(0).getNodeValue()),
+                           new Coord(Double.parseDouble( fstElmnt.getElementsByTagName("gpsX").item(0).getChildNodes().item(0).getNodeValue()),
+                                   Double.parseDouble(  fstElmnt.getElementsByTagName("gpsY").item(0).getChildNodes().item(0).getNodeValue())));
+
+               }
             }
 
 

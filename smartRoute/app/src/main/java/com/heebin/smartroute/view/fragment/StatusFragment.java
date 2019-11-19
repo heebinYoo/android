@@ -49,35 +49,18 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
 
     private OnStatusFragmentListener mListener;
     private Context context;
+
     private StationAdapter stationAdapter;
     private BusAdapter busAdapter;
+
     private Location location;
 
     private ArrayList<Station> stations=new ArrayList<Station>();
     private ArrayList<Bus> buses = new ArrayList<Bus>();
 
     private StationArriveSearcherConnector stationArriveSearcherConnector;
+    private boolean isOnBusDataLoading = false;
 
-        @Override
-        public void onLocationChanged(Location location) {
-            this.location=location;
-            Log.d("where", "initMap: " + location.getLatitude() + " :: " +location.getLongitude());
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-
-        }
 
 
     @Override
@@ -86,15 +69,69 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_status, container, false);
-
         setLocation();
         setRecycler(rootView);
         return rootView;
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+        if (context instanceof OnStatusFragmentListener) {
+            mListener = (OnStatusFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+
+
+        makeLoop();
+
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+
+
+    private void setList(){
+
+        stations.clear();
+
+        //HashSet<Bus> busHashSet = new HashSet<Bus>();
+
+        for (int i = 0; i < BusStationMatrixHolder.getInstance().getDetailStations().size(); i++) {
+            Station station = BusStationMatrixHolder.getInstance().getDetailStations().get(i);
+            if(Distance.distance(location.getLatitude(),location.getLongitude(),station.getGpsY(),station.getGpsX())<1000){
+                stations.add(station);
+                //busHashSet.addAll(BusStationMatrixHolder.getInstance().getAvailableBus(i));
+            }
+        }
+        //buses.addAll(busHashSet);
+
+        if(!isOnBusDataLoading) {
+            Log.d("setList", "setList: newly load nearest bus");
+            isOnBusDataLoading = true;
+            stationArriveSearcherConnector = new StationArriveSearcherConnector();
+            stationArriveSearcherConnector.preRun(stations);
+            Connector[] connector = {stationArriveSearcherConnector};
+            new HTTPAsyncRunner(this, connector).execute(1);
+        }
+        else {
+            Log.d("setList", "setList: in loading, ignore HTTP");
+        }
+
+
+    }
+
     private void setRecycler(ViewGroup rootView){
 
         setList();
@@ -110,51 +147,7 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
         stationRecyclerView.setAdapter(stationAdapter);
     }
 
-    private void setLocation() {
-        if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(context,"location permission problem",Toast.LENGTH_LONG);
-        }
-
-        final LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-       location =  lm.getLastKnownLocation(GPS_PROVIDER);
-        lm.requestLocationUpdates(GPS_PROVIDER, 3000,10,this);
-
-    }
-
-    private void setList(){
-        buses.clear();
-        stations.clear();
-
-        //HashSet<Bus> busHashSet = new HashSet<Bus>();
-
-        for (int i = 0; i < BusStationMatrixHolder.getInstance().getDetailStations().size(); i++) {
-            Station station = BusStationMatrixHolder.getInstance().getDetailStations().get(i);
-            if(Distance.distance(location.getLatitude(),location.getLongitude(),station.getGpsY(),station.getGpsX())<1000){
-                stations.add(station);
-                //busHashSet.addAll(BusStationMatrixHolder.getInstance().getAvailableBus(i));
-            }
-        }
-        //buses.addAll(busHashSet);
-
-        stationArriveSearcherConnector  = new StationArriveSearcherConnector();
-        stationArriveSearcherConnector.preRun(stations);
-        Connector[] connector = {stationArriveSearcherConnector};
-        new HTTPAsyncRunner(this, connector).execute(1);
-
-
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.context = context;
-        if (context instanceof OnStatusFragmentListener) {
-            mListener = (OnStatusFragmentListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-
+    private void makeLoop(){
 
         Timer timer = new Timer(true);
         Handler handler = new Handler();
@@ -165,37 +158,33 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
                     public void run(){
 
                         setList();
-                        busAdapter.notifyDataSetChanged();
                         stationAdapter.notifyDataSetChanged();
+
                     }
                 });
             }
         }, 0, 5000);
 
-
-
-
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+
 
     @Override
     public void onSuccess(String s) {
+        isOnBusDataLoading=false;
         HashMap<Bus, Coord> result = stationArriveSearcherConnector.postRun();
-        buses.addAll(result .keySet());
+
+        buses.clear();
+        buses.addAll(result.keySet());
 
         Collections.sort(buses, new Comparator<Bus>() {
             @Override
             public int compare(Bus bus, Bus t1) {
                if( Distance.distance(location.getLatitude(),location.getLongitude(),result.get(bus).Y,result.get(bus).X)>
                 Distance.distance(location.getLatitude(),location.getLongitude(),result.get(t1).Y,result.get(t1).X)){
-                   return -1;
+                   return 1;
                }
-                return 1;
+                return -1;
             }
         });
 
@@ -209,26 +198,68 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
     }
 
 
+
+
+
+
+
     public interface OnStatusFragmentListener {
 
         void onStatusInteraction();
     }
 
-
-
     @Override
     public void onBusItemClick(View v, int position) {
-        Log.d("StatusFragment", "onBusItemClick: "+BusStationMatrixHolder.getInstance().getRelatedBus().get(position).getBusName());
+        Log.d("StatusFragment", "onBusItemClick: "+buses.get(position).getBusName());
+        mListener.onStatusInteraction();
 
 
     }
 
     @Override
     public void onStationItemClick(View v, int position) {
-        Log.d("StatusFragment", "onStationItemClick: "+ BusStationMatrixHolder.getInstance().getDetailStations().get(position).getStationName());
+        Log.d("StatusFragment", "onStationItemClick: "+ stations.get(position).getStationName());
+        mListener.onStatusInteraction();
 
     }
 
+
+
+
+
+
+    private void setLocation() {
+        if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context,"location permission problem",Toast.LENGTH_LONG);
+        }
+
+        final LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        location =  lm.getLastKnownLocation(GPS_PROVIDER);
+        lm.requestLocationUpdates(GPS_PROVIDER, 3000,10,this);
+
+    }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+        this.location=location;
+        Log.d("onLocationChanged", "this is my location now: " + location.getLatitude() + " :: " +location.getLongitude());
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
 
 
 }
