@@ -26,6 +26,11 @@ public class StationArriveSearcherConnector extends Connector {
 
     private static final String urlBody = "http://ws.bus.go.kr/api/rest/buspos/getBusPosByRtid";
 
+
+//http://ws.bus.go.kr/api/rest/buspos/getBusPosByRtid?busRouteId=100100117&serviceKey=KhPxLJdPDVQZwVP4PWVyIXCXXaqu3PQUTE%2BSX7fEAYicTAdXjr%2Bhb0%2Bucz%2FHfBpWmTWiLRHMnFBtqCF2AnkX8Q%3D%3D
+
+
+
     private ArrayList<String> interestedStIds;
     private ArrayList<String> interestedBusIds;
     private HashMap<Bus, Coord> nearBuses;
