@@ -22,9 +22,7 @@ import android.widget.Toast;
 import com.heebin.smartroute.R;
 import com.heebin.smartroute.busAPI.async.HTTPAsyncRunner;
 import com.heebin.smartroute.busAPI.connector.Connector;
-import com.heebin.smartroute.busAPI.connector.async.NearStationSearcherConnector;
-import com.heebin.smartroute.busAPI.connector.async.RouteSearcherConnector;
-import com.heebin.smartroute.busAPI.connector.async.StationArriveSearcherConnector;
+import com.heebin.smartroute.busAPI.connector.sync.StationArriveSearcherConnector;
 import com.heebin.smartroute.data.bean.meta.Coord;
 import com.heebin.smartroute.data.bean.raw.Bus;
 import com.heebin.smartroute.data.bean.raw.Station;
@@ -38,7 +36,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -105,14 +102,14 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
 
         stations.clear();
 
-        HashSet<Bus> busHashSet = new HashSet<Bus>();///////곧 지우시길
+        //HashSet<Bus> busHashSet = new HashSet<Bus>();///////곧 지우시길
 
         try {
             for (int i = 0; i < BusStationMatrixHolder.getInstance().getDetailStations().size(); i++) {
                 Station station = BusStationMatrixHolder.getInstance().getDetailStations().get(i);
                 if (Distance.distance(location.getLatitude(), location.getLongitude(), station.getGpsY(), station.getGpsX()) < 1000) {
                     stations.add(station);
-                    busHashSet.addAll(BusStationMatrixHolder.getInstance().getAvailableBus(i));///////곧 지우시길
+                    //busHashSet.addAll(BusStationMatrixHolder.getInstance().getAvailableBus(i));///////곧 지우시길
                 }
             }
         }
@@ -120,9 +117,9 @@ public class StatusFragment extends Fragment implements BusAdapter.OnItemClickLi
             return;
         }
 
-        buses.addAll(busHashSet);///////곧 지우시길
+       // buses.addAll(busHashSet);///////곧 지우시길
 
-        if(!isOnBusDataLoading && false) {
+        if(!isOnBusDataLoading ) {
             Log.d("setList", "setList: newly load nearest bus");
             isOnBusDataLoading = true;
             stationArriveSearcherConnector = new StationArriveSearcherConnector();

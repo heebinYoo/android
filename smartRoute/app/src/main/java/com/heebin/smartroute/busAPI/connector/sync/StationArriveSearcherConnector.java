@@ -1,4 +1,4 @@
-package com.heebin.smartroute.busAPI.connector.async;
+package com.heebin.smartroute.busAPI.connector.sync;
 
 import android.location.Location;
 import android.util.Log;
